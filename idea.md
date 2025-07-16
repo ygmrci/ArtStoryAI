@@ -20,6 +20,7 @@ Kullanıcılar, ilgilendikleri bir sanat eserinin adını uygulamaya girerek, o 
 - Kullanıcının girdiği tablo adına göre, müze API’lerinden tabloya dair temel bilgiler (sanatçı, yıl, başlık, açıklama, görsel) alınacak.
 - Ardından bu bilgiler, OpenAI API’si gibi bir dil modeliyle sadeleştirilerek ve hikâyeleştirilerek kullanıcıya sunulacak.
 - Kullanıcı, teknik olmayan bir dilde tabloya dair anlamlı ve etkileyici bir açıklama okuyabilecek.
+- Back-end geliştirme sürecinde, API entegrasyonları, veri işleme ve içerik üretimi gibi adımlarda yapay zeka desteğinden (örneğin ChatGPT veya benzeri modellerden) yararlanılacaktır. Bu sayede içerik üretimi ve dil işleme süreçleri daha verimli ve yaratıcı bir şekilde yürütülecektir.
 
 ## 🧩 Hedeflenen Sonuç
 

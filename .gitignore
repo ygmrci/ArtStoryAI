@@ -1,0 +1,8 @@
+# Ortak kök .gitignore
+.vscode/
+.DS_Store
+.env
+*.env
+node_modules/
+venv/
+__pycache__/ 
