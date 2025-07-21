@@ -3,9 +3,9 @@
 ## 1. Proje Kurulumu & Altyapı
 
 - [x] Proje için frontend (Next.js) ve backend (FastAPI) repo’larını oluştur
-- [ ] Versiyon kontrolü (Git/GitHub) yapılandır
-- [ ] Ortak README ve temel dökümantasyon hazırla
-- [ ] Ortak kodlama standartları ve linter ayarlarını kur (hem frontend hem backend)
+- [x] Versiyon kontrolü (Git/GitHub) yapılandır
+- [x] Ortak README ve temel dökümantasyon hazırla
+- [x] Ortak kodlama standartları ve linter ayarlarını kur (hem frontend hem backend)
 - [ ] Ortam değişkenleri (.env) ve örnek dosyalarını oluştur
 
 ---

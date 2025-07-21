@@ -1,77 +1,95 @@
 {
-  "theme": "light",
-  "colors": {
-    "primaryGradient": {
-      "from": "#FF6A00",
-      "to": "#FF0000"
+  "theme": {
+    "mode": "dark",
+    "colors": {
+      "background": "#121212",
+      "surface": "#1e1e1e",
+      "text": "#ffffff",
+      "primaryGradient": "linear-gradient(90deg, #ff4e00, #ec9f05)",
+      "accent": "#ec9f05",
+      "muted": "#999999"
     },
-    "background": "#FFFFFF",
-    "surface": "#F5F5F5",
-    "textPrimary": "#111111",
-    "textSecondary": "#555555",
-    "border": "#E0E0E0"
-  },
-  "typography": {
-    "fontFamily": "Inter, sans-serif",
-    "headings": {
-      "h1": {
-        "fontSize": "2.25rem",
-        "fontWeight": "700"
-      },
-      "h2": {
-        "fontSize": "1.5rem",
-        "fontWeight": "600"
-      },
-      "h3": {
-        "fontSize": "1.25rem",
-        "fontWeight": "500"
-      }
+    "fonts": {
+      "body": "Inter, sans-serif",
+      "heading": "Poppins, sans-serif"
     },
-    "body": {
-      "fontSize": "1rem",
-      "lineHeight": "1.6"
+    "borderRadius": {
+      "card": "1rem",
+      "button": "0.75rem"
+    },
+    "shadows": {
+      "card": "0 6px 16px rgba(0, 0, 0, 0.4)"
     }
   },
-  "buttons": {
-    "default": {
-      "padding": "12px 24px",
-      "borderRadius": "8px",
-      "fontWeight": "600",
-      "background": "linear-gradient(90deg, #FF6A00 0%, #FF0000 100%)",
-      "color": "#FFFFFF",
-      "hover": {
-        "opacity": "0.85"
+  "components": {
+    "header": {
+      "layout": "flex justify-between items-center px-10 py-6 bg-surface sticky top-0 z-50",
+      "logo": {
+        "type": "icon",
+        "icon": "\ud83c\udfa8",
+        "text": "ArtStoryAI"
+      },
+      "navigation": {
+        "type": "horizontal",
+        "items": [
+          "Ana Sayfa",
+          "Ke\u015ffet",
+          "Hakk\u0131nda",
+          "\u0130leti\u015fim"
+        ],
+        "style": "flex gap-6 text-white sm:hidden"
+      },
+      "mobileMenu": {
+        "type": "hamburger",
+        "style": "text-white sm:hidden"
       }
+    },
+    "heroSection": {
+      "layout": "flex flex-row flex-wrap items-center justify-between px-10 py-16 gap-8 md:flex-col",
+      "title": "Sanat eserlerine hayat verin",
+      "subtitle": "Bir tablo ad\u0131 yaz\u0131n, AI sizin i\u00e7in hikayesini anlats\u0131n.",
+      "cta": {
+        "text": "Ke\u015ffetmeye Ba\u015fla",
+        "style": "px-6 py-3 rounded-button bg-gradient-to-r from-[#ff4e00] to-[#ec9f05] text-black font-semibold"
+      }
+    },
+    "searchBar": {
+      "placeholder": "Bir tablo ad\u0131 yaz\u0131n...",
+      "style": "w-full max-w-2xl px-5 py-4 rounded-lg bg-surface text-white focus:outline-none border border-gray-700",
+      "icon": "\ud83d\udd0d"
+    },
+    "artworkGrid": {
+      "layout": "grid grid-cols-3 gap-8 px-10 py-8 md:grid-cols-2 sm:grid-cols-1",
+      "cardStyle": "bg-surface p-5 rounded-card shadow-card hover:scale-105 transition-transform duration-200"
+    },
+    "footer": {
+      "layout": "grid grid-cols-3 gap-6 px-10 py-8 border-t border-gray-700 text-muted text-sm bg-surface sm:grid-cols-1",
+      "content": [
+        "\u00a9 2025 ArtStoryAI",
+        "Gizlilik Politikas\u0131",
+        "Kullan\u0131m \u015eartlar\u0131"
+      ]
     }
   },
-  "card": {
-    "background": "#FFFFFF",
-    "borderRadius": "16px",
-    "boxShadow": "0 4px 12px rgba(0,0,0,0.06)",
-    "padding": "20px"
+  "responsive": {
+    "breakpoints": {
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px"
+    },
+    "mobileFirst": false,
+    "scaling": "grid and flex utilities with responsive typography"
   },
   "icons": {
-    "style": "minimal",
-    "color": "#FF6A00",
-    "size": "20px"
+    "search": "heroicons/magnifying-glass",
+    "menu": "heroicons/bars-3",
+    "close": "heroicons/x-mark",
+    "playAudio": "heroicons/speaker-wave",
+    "gallery": "heroicons/photo",
+    "info": "heroicons/information-circle",
+    "language": "heroicons/globe-alt"
   },
-  "layout": {
-    "grid": {
-      "columns": {
-        "mobile": 1,
-        "tablet": 2,
-        "desktop": 3
-      },
-      "gap": "24px"
-    },
-    "breakpoints": {
-      "mobile": "0px",
-      "tablet": "768px",
-      "desktop": "1024px"
-    }
-  },
-  "animations": {
-    "transition": "all 0.3s ease-in-out",
-    "hoverScale": "scale(1.03)"
-  }
+
+  "_note": "Although this design follows mobile-first conventions, this project should be designed desktop-first by default."
 }
