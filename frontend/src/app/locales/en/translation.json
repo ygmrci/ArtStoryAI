@@ -1,4 +1,23 @@
 {
   "welcome": "Welcome!",
-  "description": "Discover artworks with ArtStoryAI."
-} 
+  "description": "Discover artworks with ArtStoryAI.",
+  "search": {
+    "placeholder": "Type artist or artwork name...",
+    "button": "Search",
+    "ariaLabel": "Search for artist or artwork name",
+    "error": "Please enter an artist or artwork name."
+  },
+  "artwork": {
+    "loading": "Loading...",
+    "notFound": "Artwork not found.",
+    "apiError": "API response failed.",
+    "fetchError": "An error occurred while fetching artwork information.",
+    "artist": "Artist",
+    "year": "Year",
+    "movement": "Movement",
+    "museum": "Museum",
+    "story": "Story",
+    "artistBio": "Artist Biography",
+    "movementDesc": "Movement Description"
+  }
+}

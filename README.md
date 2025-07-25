@@ -10,7 +10,7 @@ Sanatseverler için, tablo adıyla hızlıca sade ve etkileyici açıklamalar, s
 - **Backend:** FastAPI (Python)
 - **Veritabanı:** PostgreSQL (planlı)
 - **Cache:** Redis (planlı)
-- **AI:** OpenAI GPT-4 Turbo, Vision API (planlı)
+- **AI:** OpenAI GPT-4 Turbo (Vision API entegrasyonu planlanıyor)
 
 ## Klasör Yapısı
 
@@ -23,7 +23,36 @@ ArtStoryAI/
 
 ## Kurulum
 
-### 1. Frontend
+### 1. Backend Kurulumu
+
+```bash
+cd backend
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+#### .env Dosyası Oluşturma
+
+Backend klasöründe bir `.env` dosyası oluşturun ve aşağıdaki satırı ekleyin:
+
+```
+OPENAI_API_KEY=sk-xxxxxx
+```
+
+- OpenAI API anahtarınızı [OpenAI platformundan](https://platform.openai.com/api-keys) alabilirsiniz.
+- Ücretsiz anahtarlar ile dakikada 3 istek sınırı vardır.
+
+#### Backend'i Başlatma
+
+```bash
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### 2. Frontend Kurulumu
 
 ```bash
 cd frontend
@@ -31,28 +60,21 @@ npm install
 npm run dev
 ```
 
-### 2. Backend
-
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload
-```
-
 ### 3. Uygulamayı Aç
 
 - Frontend: http://localhost:3000
 - Backend API: http://127.0.0.1:8000
 
+### Kurulum Sırası
+
+1. Önce backend'i kurup başlatın.
+2. Sonra frontend'i kurup başlatın.
+
 ## Katkı ve Geliştirme
 
 ## Notlar
 
-Bu projede OpenAI API entegrasyonu yapılmıştır. Ancak şu anda geçerli bir OpenAI API anahtarı bulunmadığından dolayı, demo sırasında hikaye üretimi çalışmayabilir.
-
-Fonksiyonlar `features/openai_story.py` içinde yapılandırılmıştır. Gerçek bir OpenAI API key `.env` dosyasına eklendiğinde sistem sorunsuz çalışacaktır.
+Bu projede OpenAI API entegrasyonu yapılmıştır. Gerçek bir OpenAI API key `.env` dosyasına eklendiğinde sistem sorunsuz çalışacaktır. Fonksiyonlar `features/openai_story.py` içinde yapılandırılmıştır.
 
 - Tüm tasklar için: `scripts/master_task_list.md`
 - Frontend ve backend için ayrı README dosyalarına bakınız.
@@ -60,3 +82,17 @@ Fonksiyonlar `features/openai_story.py` içinde yapılandırılmıştır. Gerçe
 ---
 
 Daha fazla bilgi için: [scripts/ArtStoryAI-PRD.md](scripts/ArtStoryAI-PRD.md)
+
+---
+
+## OpenAI API Kullanımı ve Rate Limit Uyarısı
+
+Bu projede OpenAI API kullanılmaktadır. Ücretsiz API anahtarlarında genellikle **dakikada 3 istek** sınırı vardır. Eğer çok hızlı veya arka arkaya fazla sorgu gönderirseniz, API'dan cevap alınamaz ve ekranda şu mesajlar görünebilir:
+
+- `AI ile üretiliyor...`
+- `AI ile hikaye üretilemedi.`
+
+Bu bir hata değildir! Sadece OpenAI'nın hız limiti dolduğu için geçici olarak bilgi alınamıyor demektir.  
+**Çözüm:** 20-30 saniye bekleyip tekrar deneyin. Daha yüksek limit için OpenAI hesabınıza kredi ekleyebilirsiniz (isteğe bağlı).
+
+Daha fazla bilgi: [OpenAI Rate Limits](https://platform.openai.com/account/rate-limits)

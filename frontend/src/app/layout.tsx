@@ -16,7 +16,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#121212] font-body text-[#ffffff]">{children}</body>
+      <body
+        className="bg-black min-h-screen font-body text-white pt-20"
+        style={{ backgroundColor: '#000000 !important' }}
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,4 +1,23 @@
 {
   "welcome": "Hoş geldiniz!",
-  "description": "ArtStoryAI ile sanat eserlerini keşfet."
+  "description": "ArtStoryAI ile sanat eserlerini keşfet.",
+  "search": {
+    "placeholder": "Sanatçı veya eser adı yazın...",
+    "button": "Ara",
+    "ariaLabel": "Sanatçı veya eser adı arayın",
+    "error": "Lütfen bir sanatçı veya eser adı girin."
+  },
+  "artwork": {
+    "loading": "Yükleniyor...",
+    "notFound": "Eser bulunamadı.",
+    "apiError": "API yanıtı başarısız.",
+    "fetchError": "Eser bilgileri alınırken bir hata oluştu.",
+    "artist": "Sanatçı",
+    "year": "Yıl",
+    "movement": "Akım",
+    "museum": "Müze",
+    "story": "Hikayesi",
+    "artistBio": "Sanatçı Biyografisi",
+    "movementDesc": "Akım Açıklaması"
+  }
 }

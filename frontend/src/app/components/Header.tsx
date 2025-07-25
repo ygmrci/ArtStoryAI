@@ -15,52 +15,54 @@ const Header = () => {
   const handleMenuToggle = () => setIsMenuOpen((v) => !v);
 
   return (
-    <header className="flex justify-between items-center px-10 py-6 bg-[#1e1e1e] sticky top-0 z-50">
-      <a
-        href="/"
-        className="flex items-center gap-2 text-white text-2xl font-extrabold tracking-tight font-heading select-none"
-        tabIndex={0}
-        aria-label="ArtStoryAI Ana Sayfa"
-      >
-        <span className="text-3xl" role="img" aria-label="Palet">
-          🎨
-        </span>
-        <span className="ml-1">ASAI</span>
-      </a>
-      <nav className="hidden md:flex gap-6 text-white" aria-label="Ana menü">
-        {navItems.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="hover:text-[#ec9f05] transition-colors focus:outline-none focus:text-[#ec9f05]"
-            tabIndex={0}
-          >
-            {item.label}
-          </a>
-        ))}
-      </nav>
-      <div className="flex items-center gap-4">
-        <LanguageSwitcher />
-        {/* Mobil menü butonu */}
-        <button
-          className="md:hidden text-white focus:outline-none"
-          aria-label={isMenuOpen ? 'Menüyü Kapat' : 'Menüyü Aç'}
-          onClick={handleMenuToggle}
+    <header className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-md shadow-md border-b border-gray-200 transition-all duration-300">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+        <a
+          href="/"
+          className="flex items-center gap-2 text-gray-900 text-2xl font-extrabold tracking-tight font-heading select-none drop-shadow-lg hover:scale-105 transition-transform duration-200"
+          tabIndex={0}
+          aria-label="ArtStoryAI Ana Sayfa"
         >
-          {isMenuOpen ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
-        </button>
+          <span className="text-3xl" role="img" aria-label="Palet">
+            🎨
+          </span>
+          <span className="ml-1">ArtStoryAI</span>
+        </a>
+        <nav className="hidden md:flex gap-8 text-gray-700 font-medium" aria-label="Ana menü">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="relative px-2 py-1 hover:text-indigo-600 focus:text-indigo-600 transition-colors duration-200 focus:outline-none after:content-[''] after:block after:h-0.5 after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+              tabIndex={0}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
+          {/* Mobil menü butonu */}
+          <button
+            className="md:hidden text-gray-700 focus:outline-none hover:scale-110 transition-transform duration-200"
+            aria-label={isMenuOpen ? 'Menüyü Kapat' : 'Menüyü Aç'}
+            onClick={handleMenuToggle}
+          >
+            {isMenuOpen ? <XMarkIcon className="w-7 h-7" /> : <Bars3Icon className="w-7 h-7" />}
+          </button>
+        </div>
       </div>
       {/* Mobil menü */}
       {isMenuOpen && (
         <nav
-          className="absolute top-full left-0 w-full bg-[#1e1e1e] flex flex-col gap-4 px-10 py-6 md:hidden z-50 border-b border-gray-700"
+          className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md flex flex-col gap-4 px-6 py-6 z-50 border-b border-gray-200 shadow-md"
           aria-label="Mobil menü"
         >
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="text-white text-lg hover:text-[#ec9f05] transition-colors focus:outline-none focus:text-[#ec9f05]"
+              className="text-gray-900 text-lg hover:text-indigo-600 focus:text-indigo-600 transition-colors duration-200 focus:outline-none"
               tabIndex={0}
               onClick={() => setIsMenuOpen(false)}
             >
