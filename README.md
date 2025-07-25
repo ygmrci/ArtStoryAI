@@ -73,8 +73,11 @@ npm run dev
 ## Katkı ve Geliştirme
 
 ## Notlar
+UI, 
 
 Bu projede OpenAI API entegrasyonu yapılmıştır. Gerçek bir OpenAI API key `.env` dosyasına eklendiğinde sistem sorunsuz çalışacaktır. Fonksiyonlar `features/openai_story.py` içinde yapılandırılmıştır.
+
+Ayrıca, kullanıcı arayüzü (UI) şu anda temel haliyle hazırlanmıştır. Projenin görsel tasarımı ve kullanıcı deneyimi ilerleyen aşamalarda iyileştirilecektir.
 
 - Tüm tasklar için: `scripts/master_task_list.md`
 - Frontend ve backend için ayrı README dosyalarına bakınız.
