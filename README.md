@@ -1,5 +1,9 @@
 # ArtStoryAI
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=flat-square&logo=github)](https://github.com/ygmrci/ArtStoryAI)
+
+**GitHub Repository:** [https://github.com/ygmrci/ArtStoryAI](https://github.com/ygmrci/ArtStoryAI)
+
 ## Proje Amacı
 
 Sanatseverler için, tablo adıyla hızlıca sade ve etkileyici açıklamalar, sanatçı biyografisi ve sanat akımı bilgisi sunan, AI destekli bir web uygulaması.
@@ -73,7 +77,8 @@ npm run dev
 ## Katkı ve Geliştirme
 
 ## Notlar
-UI, 
+
+UI,
 
 Bu projede OpenAI API entegrasyonu yapılmıştır. Gerçek bir OpenAI API key `.env` dosyasına eklendiğinde sistem sorunsuz çalışacaktır. Fonksiyonlar `features/openai_story.py` içinde yapılandırılmıştır.
 
