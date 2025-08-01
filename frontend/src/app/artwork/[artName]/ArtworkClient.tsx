@@ -2,6 +2,15 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
+import SimilarArtworks from '../../components/SimilarArtworks';
+
+interface SimilarArtwork {
+  title: string;
+  artist: string;
+  year: string;
+  image_url: string;
+  similarity_reason: string;
+}
 
 interface ArtworkData {
   art_name: string;
@@ -13,6 +22,7 @@ interface ArtworkData {
   artist_bio: string;
   movement_desc: string;
   image_url: string;
+  similar_artworks?: SimilarArtwork[];
 }
 
 export default function ArtworkClient({ artName }: { artName: string }) {
@@ -587,6 +597,11 @@ export default function ArtworkClient({ artName }: { artName: string }) {
           </div>
         </div>
       </div>
+
+      {/* Benzer Eserler */}
+      {artwork.similar_artworks && artwork.similar_artworks.length > 0 && (
+        <SimilarArtworks artworks={artwork.similar_artworks} currentArtwork={artwork.art_name} />
+      )}
     </div>
   );
 }

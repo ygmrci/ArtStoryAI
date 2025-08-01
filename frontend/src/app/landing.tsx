@@ -18,9 +18,8 @@ export default function Landing() {
 
     try {
       // Backend API'sine istek at
-      const response = await fetch(
-        `http://localhost:8000/artwork/${encodeURIComponent(query.trim())}`,
-      );
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/artwork/${encodeURIComponent(query.trim())}`);
 
       if (!response.ok) {
         throw new Error('API yanıtı başarısız');

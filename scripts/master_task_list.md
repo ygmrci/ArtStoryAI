@@ -2,11 +2,11 @@
 
 ## 1. Proje Kurulumu & Altyapı
 
-- [x] Proje için frontend (Next.js) ve backend (FastAPI) repo’larını oluştur
+- [x] Proje için frontend (Next.js) ve backend (FastAPI) repo'larını oluştur
 - [x] Versiyon kontrolü (Git/GitHub) yapılandır
 - [x] Ortak README ve temel dökümantasyon hazırla
 - [x] Ortak kodlama standartları ve linter ayarlarını kur (hem frontend hem backend)
-- [ ] Ortam değişkenleri (.env) ve örnek dosyalarını oluştur
+- [x] Ortam değişkenleri (.env) ve örnek dosyalarını oluştur
 
 ---
 
@@ -14,27 +14,27 @@
 
 ### 2.1. Temel Yapı
 
-- [ ] Next.js projesi başlat
-- [ ] TailwindCSS’i projeye entegre et
-- [ ] i18next ile çoklu dil desteği altyapısını kur
-- [ ] Ana layout ve temel sayfa yapısını oluştur
-- [ ] Erişilebilirlik (a11y) ayarlarını uygula
+- [x] Next.js projesi başlat
+- [x] TailwindCSS'i projeye entegre et
+- [x] i18next ile çoklu dil desteği altyapısını kur
+- [x] Ana layout ve temel sayfa yapısını oluştur
+- [x] Erişilebilirlik (a11y) ayarlarını uygula
 
 ### 2.2. Ana Sayfa
 
-- [ ] Ana sayfa bileşenini oluştur
-- [ ] Arama kutusu (input) bileşenini ekle
-- [ ] Arama butonu ve klavye ile tetikleme desteği ekle
-- [ ] Placeholder ve hata mesajlarını çoklu dil desteğiyle hazırla
+- [x] Ana sayfa bileşenini oluştur
+- [x] Arama kutusu (input) bileşenini ekle
+- [x] Arama butonu ve klavye ile tetikleme desteği ekle
+- [x] Placeholder ve hata mesajlarını çoklu dil desteğiyle hazırla
 
 ### 2.3. Sonuç Ekranı
 
-- [ ] Sanat eseri görseli gösterimi için bileşen oluştur
-- [ ] Sanatçı, yıl, dönem, akım, müze bilgisi alanlarını ekle
-- [ ] AI tarafından üretilen kısa hikaye alanı ekle
-- [ ] Sanatçı biyografisi alanı ekle
-- [ ] Sanat akımı açıklaması alanı ekle
-- [ ] API’den gelen hata ve yükleniyor durumlarını yönet
+- [x] Sanat eseri görseli gösterimi için bileşen oluştur
+- [x] Sanatçı, yıl, dönem, akım, müze bilgisi alanlarını ekle
+- [x] AI tarafından üretilen kısa hikaye alanı ekle
+- [x] Sanatçı biyografisi alanı ekle
+- [x] Sanat akımı açıklaması alanı ekle
+- [x] API'den gelen hata ve yükleniyor durumlarını yönet
 
 ### 2.4. Keşif & Ek Özellikler
 
@@ -45,10 +45,10 @@
 
 ### 2.5. UI/UX
 
-- [ ] Responsive tasarım ve mobil uyumluluk
-- [ ] Yükleniyor animasyonları ve iskelet ekranlar
-- [ ] Hata mesajları ve kullanıcıya dost bildirimler
-- [ ] Temiz ve sade görsel hiyerarşi
+- [x] Responsive tasarım ve mobil uyumluluk
+- [x] Yükleniyor animasyonları ve iskelet ekranlar
+- [x] Hata mesajları ve kullanıcıya dost bildirimler
+- [x] Temiz ve sade görsel hiyerarşi
 
 ---
 
@@ -56,32 +56,32 @@
 
 ### 3.1. Temel API Altyapısı
 
-- [ ] FastAPI projesi başlat
-- [ ] Temel API endpoint’lerini oluştur
-- [ ] CORS ve güvenlik ayarlarını yapılandır
-- [ ] Ortam değişkenleri ve yapılandırma dosyalarını hazırla
+- [x] FastAPI projesi başlat
+- [x] Temel API endpoint'lerini oluştur
+- [x] CORS ve güvenlik ayarlarını yapılandır
+- [x] Ortam değişkenleri ve yapılandırma dosyalarını hazırla
 
 ### 3.2. Sanat Eseri Bilgi Toplama
 
-- [ ] Kullanıcıdan gelen tablo adını normalize eden endpoint yaz
-- [ ] Fuzzy-matching ve çoklu dil desteği için yardımcı fonksiyonlar ekle
-- [ ] Wikidata, MET Museum, Google Arts & Culture, Harvard Art Museums, Europeana API’lerine bağlan
-- [ ] API’lerden sanatçı, yıl, dönem, akım, müze, görsel URL gibi bilgileri çek
-- [ ] API sonuçlarını normalize eden yardımcı fonksiyonlar yaz
+- [x] Kullanıcıdan gelen tablo adını normalize eden endpoint yaz
+- [x] Fuzzy-matching ve çoklu dil desteği için yardımcı fonksiyonlar ekle
+- [x] Wikidata, MET Museum, Google Arts & Culture, Harvard Art Museums, Europeana API'lerine bağlan
+- [x] API'lerden sanatçı, yıl, dönem, akım, müze, görsel URL gibi bilgileri çek
+- [x] API sonuçlarını normalize eden yardımcı fonksiyonlar yaz
 
 ### 3.3. AI ile İçerik Üretimi
 
-- [ ] OpenAI API (GPT-4 Turbo) entegrasyonunu kur
-- [ ] Prompt şablonlarını oluştur (hikaye, biyografi, akım açıklaması için)
-- [ ] Eser açıklaması (hikaye) üretimi endpoint’i yaz
-- [ ] Sanatçı biyografisi üretimi endpoint’i yaz
-- [ ] Sanat akımı açıklaması üretimi endpoint’i yaz
-- [ ] Uzman modu için teknik açıklama desteği ekle
+- [x] OpenAI API (GPT-4 Turbo) entegrasyonunu kur
+- [x] Prompt şablonlarını oluştur (hikaye, biyografi, akım açıklaması için)
+- [x] Eser açıklaması (hikaye) üretimi endpoint'i yaz
+- [x] Sanatçı biyografisi üretimi endpoint'i yaz
+- [x] Sanat akımı açıklaması üretimi endpoint'i yaz
+- [x] Uzman modu için teknik açıklama desteği ekle
 
 ### 3.4. Görsel Tanıma (Vision AI)
 
 - [ ] Kullanıcıdan gelen görseli işleyen endpoint yaz
-- [ ] Vision AI API’si ile tablo tanıma fonksiyonunu entegre et
+- [ ] Vision AI API'si ile tablo tanıma fonksiyonunu entegre et
 - [ ] Tanınan tabloya göre bilgi çekme akışını kur
 
 ### 3.5. Benzer Eserler & Öneri Sistemi
@@ -94,7 +94,7 @@
 ### 3.6. Performans & Cache
 
 - [ ] Redis entegrasyonunu kur
-- [ ] API isteklerini ve AI çıktısını cache’le
+- [ ] API isteklerini ve AI çıktısını cache'le
 - [ ] Sık kullanılan veri için cache stratejisi uygula
 
 ### 3.7. Veritabanı
@@ -106,26 +106,26 @@
 
 ### 3.8. Hata Yönetimi & Loglama
 
-- [ ] API için merkezi hata yönetimi middleware’i ekle
-- [ ] Kullanıcıya dost hata mesajları döndür
-- [ ] Loglama ve monitoring altyapısı kur
+- [x] API için merkezi hata yönetimi middleware'i ekle
+- [x] Kullanıcıya dost hata mesajları döndür
+- [x] Loglama ve monitoring altyapısı kur
 
 ---
 
 ## 4. Entegrasyon & Test
 
-- [ ] Frontend ve backend’i entegre et (API endpoint’lerini bağla)
-- [ ] API endpoint’leri için birim ve entegrasyon testleri yaz
-- [ ] Frontend için temel kullanıcı senaryolarını test et
-- [ ] Erişilebilirlik ve performans testleri yap
-- [ ] Çoklu dil desteği testleri yap
+- [x] Frontend ve backend'i entegre et (API endpoint'lerini bağla)
+- [x] API endpoint'leri için birim ve entegrasyon testleri yaz
+- [x] Frontend için temel kullanıcı senaryolarını test et
+- [x] Erişilebilirlik ve performans testleri yap
+- [x] Çoklu dil desteği testleri yap
 
 ---
 
 ## 5. Deployment & DevOps
 
-- [ ] Frontend’i Vercel/Netlify’a deploy et
-- [ ] Backend’i Render/Railway’a deploy et
+- [ ] Frontend'i Vercel/Netlify'a deploy et
+- [ ] Backend'i Render/Railway'a deploy et
 - [ ] Ortam değişkenlerini production için ayarla
 - [ ] Temel monitoring ve hata bildirimi kur
 
@@ -136,3 +136,15 @@
 - [ ] Kullanıcı favorileri/koleksiyon oluşturma modülü ekle
 - [ ] Eğitim modülü (okullar için) geliştir
 - [ ] Müze işbirliği için QR kod ile AI açıklama desteği ekle
+
+---
+
+## 7. Agent Mimarisi & Otomasyon
+
+- [x] Base Agent sınıfı oluştur
+- [x] Artwork Analyzer Agent implement et
+- [x] Content Generator Agent implement et
+- [x] Agent Manager sistemi kur
+- [x] Workflow orchestration sistemi
+- [x] Örnek kullanımlar ve dokümantasyon
+- [x] Otomasyon süreçleri tanımla
