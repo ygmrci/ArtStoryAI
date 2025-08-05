@@ -2,5 +2,9 @@
 import Landing from './landing';
 
 export default function HomePage() {
-  return <Landing />;
+  return (
+    <div className="no-header">
+      <Landing />
+    </div>
+  );
 }

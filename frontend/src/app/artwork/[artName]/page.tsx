@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ArtworkClient from './ArtworkClient';
+import Header from '../../components/Header';
 
 export async function generateMetadata({
   params,
@@ -24,5 +25,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ artNam
   const { artName } = await params;
   const decodedArtName = decodeURIComponent(artName);
 
-  return <ArtworkClient artName={decodedArtName} />;
+  return (
+    <>
+      <Header />
+      <ArtworkClient artName={decodedArtName} />
+    </>
+  );
 }

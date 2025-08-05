@@ -14,9 +14,14 @@ interface SimilarArtwork {
 interface SimilarArtworksProps {
   artworks: SimilarArtwork[];
   currentArtwork: string;
+  currentArtist?: string; // Mevcut sanatçı bilgisi için
 }
 
-export default function SimilarArtworks({ artworks, currentArtwork }: SimilarArtworksProps) {
+export default function SimilarArtworks({
+  artworks,
+  currentArtwork,
+  currentArtist,
+}: SimilarArtworksProps) {
   const router = useRouter();
 
   const handleArtworkClick = (artworkTitle: string) => {
@@ -28,7 +33,17 @@ export default function SimilarArtworks({ artworks, currentArtwork }: SimilarArt
   }
 
   return (
-    <div className="mt-12 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-6 backdrop-blur-md border border-white/10">
+    <div
+      className="mt-8 sm:mt-12 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 backdrop-blur-md"
+      style={{
+        border: 'none !important',
+        borderWidth: '0px !important',
+        borderStyle: 'none !important',
+        outline: 'none !important',
+        borderColor: 'transparent !important',
+        boxShadow: 'none !important',
+      }}
+    >
       <div className="flex items-center gap-3 mb-6">
         <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,20 +55,52 @@ export default function SimilarArtworks({ artworks, currentArtwork }: SimilarArt
             />
           </svg>
         </div>
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-          Bu Eserle Benzer Sanat Eserleri
-        </h3>
+        <span
+          style={{
+            fontSize: '1.25rem',
+            fontWeight: 'bold',
+            color: '#ffffff',
+            display: 'block',
+            textShadow: 'none',
+            background: 'none',
+            WebkitBackgroundClip: 'unset',
+            WebkitTextFillColor: '#ffffff',
+            backgroundClip: 'unset',
+            backgroundImage: 'none',
+            filter: 'none',
+            lineHeight: '1.2',
+            margin: '0',
+            padding: '0',
+          }}
+        >
+          {currentArtist ? `${currentArtist}'ın Diğer Eserleri` : 'Benzer Sanat Eserleri'}
+        </span>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      {/* Flexbox Layout - Daha kontrollü dağılım */}
+      <div className="flex flex-wrap justify-between gap-6">
         {artworks.map((artwork, index) => (
           <div
             key={index}
             onClick={() => handleArtworkClick(artwork.title)}
-            className="group cursor-pointer bg-white/5 rounded-xl overflow-hidden hover:bg-white/15 transition-all duration-500 hover:scale-105 flex-shrink-0 border border-white/10 hover:border-white/30"
-            style={{ width: '220px' }}
+            className="group cursor-pointer bg-white/5 rounded-2xl overflow-hidden hover:bg-white/15 transition-all duration-500 hover:scale-105"
+            style={{
+              width: 'calc(33.333% - 16px)',
+              minWidth: '200px',
+              maxWidth: '280px',
+              flex: '1 1 auto',
+              border: '1px solid transparent',
+              borderColor: 'transparent',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#374151';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'transparent';
+            }}
           >
-            <div className="relative h-28 overflow-hidden">
+            {/* Resim Alanı - Daha küçük yükseklik */}
+            <div className="relative h-24 sm:h-28 overflow-hidden">
               <img
                 src={artwork.image_url}
                 alt={artwork.title}
@@ -82,73 +129,23 @@ export default function SimilarArtworks({ artworks, currentArtwork }: SimilarArt
               </div>
             </div>
 
-            <div className="p-3">
-              <h4 className="text-sm font-semibold text-white mb-2 group-hover:text-yellow-300 transition-colors truncate">
+            {/* İçerik Alanı */}
+            <div className="p-2 sm:p-3">
+              <h4 className="text-sm sm:text-base font-semibold text-white mb-2 group-hover:text-yellow-300 transition-colors truncate">
                 {artwork.title}
               </h4>
               <div className="space-y-1">
-                <p className="text-gray-300 text-xs truncate flex items-center gap-1">
-                  <svg
-                    className="w-3 h-3 text-purple-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                  {artwork.artist}
-                </p>
-                <p className="text-gray-400 text-xs flex items-center gap-1">
-                  <svg
-                    className="w-3 h-3 text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  {artwork.year}
-                </p>
+                <p className="text-gray-300 text-xs sm:text-sm truncate">{artwork.artist}</p>
+                <p className="text-gray-400 text-xs sm:text-sm">{artwork.year}</p>
               </div>
-              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/10">
-                <span className="inline-block w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full animate-pulse"></span>
-                <span className="text-xs text-gray-400 truncate">{artwork.similarity_reason}</span>
+
+              {/* Benzerlik Sebebi */}
+              <div className="mt-2 pt-2 border-t border-white/10">
+                <p className="text-xs text-gray-400 truncate">{artwork.similarity_reason}</p>
               </div>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-6 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
-          <svg
-            className="w-4 h-4 text-blue-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <p className="text-gray-300 text-sm">
-            Bu eserler size önerilen benzer sanat eserleridir. Tıklayarak detaylarını
-            görebilirsiniz.
-          </p>
-        </div>
       </div>
     </div>
   );

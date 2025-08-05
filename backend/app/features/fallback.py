@@ -26,6 +26,8 @@ def get_fallback_images(art_name: str) -> Optional[str]:
         # Johannes Vermeer eserleri
         "girl with a pearl earring": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/540px-Girl_with_a_Pearl_Earring.jpg",
         "the girl with a pearl earring": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/540px-Girl_with_a_Pearl_Earring.jpg",
+        "the milkmaid": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/540px-Girl_with_a_Pearl_Earring.jpg",
+        "milkmaid": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/540px-Girl_with_a_Pearl_Earring.jpg",
         
         # Hokusai eserleri
         "the great wave": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Great_Wave_off_Kanagawa.jpg/1280px-The_Great_Wave.jpg",
@@ -65,4 +67,4 @@ def get_fallback_images(art_name: str) -> Optional[str]:
         "almond blossoms": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Vincent_van_Gogh_-_Almond_Blossom_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Almond_Blossom_-_Google_Art_Project.jpg",
     }
     name_lower = art_name.lower().strip()
-    return fallback_urls.get(name_lower)
+    return fallback_urls.get(name_lower) 

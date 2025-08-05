@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Header from './components/Header';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
@@ -41,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className="bg-black min-h-screen font-body text-white pt-20"
+        className="bg-black min-h-screen font-body text-white"
         style={{ backgroundColor: '#000000 !important' }}
       >
         {children}
