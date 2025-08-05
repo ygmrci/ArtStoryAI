@@ -27,15 +27,31 @@ ArtStoryAI/
 
 ## Kurulum
 
+### Ön Gereksinimler
+
+- **Python 3.8+** - [Python.org](https://www.python.org/downloads/) adresinden indirebilirsiniz
+- **Node.js 18+** - [Nodejs.org](https://nodejs.org/) adresinden indirebilirsiniz
+- **Git** - [Git-scm.com](https://git-scm.com/) adresinden indirebilirsiniz
+
+### Projeyi İndirme
+
+```bash
+git clone https://github.com/ygmrci/ArtStoryAI.git
+cd ArtStoryAI
+```
+
 ### 1. Backend Kurulumu
 
 ```bash
 cd backend
 python -m venv venv
+
 # Windows:
 venv\Scripts\activate
+
 # macOS/Linux:
 source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
@@ -64,6 +80,8 @@ npm install
 npm run dev
 ```
 
+**Not:** Eğer npm install sırasında hata alırsanız, Node.js sürümünüzü kontrol edin. Node.js 18 veya üzeri gereklidir.
+
 ### 3. Uygulamayı Aç
 
 - Frontend: http://localhost:3000
@@ -73,6 +91,15 @@ npm run dev
 
 1. Önce backend'i kurup başlatın.
 2. Sonra frontend'i kurup başlatın.
+
+### Mac Kullanıcıları İçin Özel Notlar
+
+- Terminal'de `python3` komutunu kullanmanız gerekebilir
+- Homebrew kullanarak Python ve Node.js kurabilirsiniz:
+  ```bash
+  brew install python node
+  ```
+- M1/M2 Mac kullanıcıları için herhangi bir ek yapılandırma gerekmez
 
 ## Katkı ve Geliştirme
 
