@@ -24,7 +24,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <div className="w-full max-w-2xl flex items-center card-gradient rounded-lg border border-white/20 px-5 py-4 search-glow">
+    <div className="search-bar w-full max-w-2xl flex items-center card-gradient rounded-lg border border-white/20 px-5 py-4 search-glow">
       <MagnifyingGlassIcon className="w-6 h-6 text-white mr-3" aria-hidden="true" />
       <input
         type="text"
@@ -37,10 +37,33 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       />
       <button
         onClick={handleSearch}
-        className="ml-3 px-4 py-2 rounded-lg glow-button text-white font-semibold focus:outline-none focus:ring-2 focus:ring-white/50"
+        className="group relative ml-3 px-6 py-3 rounded-xl font-semibold transition-all duration-500 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
+        style={{
+          background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+          color: '#ffffff',
+          boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+          e.currentTarget.style.boxShadow = '0 6px 25px rgba(59, 130, 246, 0.6)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 20px rgba(59, 130, 246, 0.4)';
+        }}
         aria-label={t('search.button')}
       >
-        {t('search.button')}
+        {/* Button Glow Effect */}
+        <div
+          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg scale-110"
+          style={{
+            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+            zIndex: -1,
+          }}
+        ></div>
+
+        <span className="relative z-10 font-medium">{t('search.button')}</span>
       </button>
     </div>
   );

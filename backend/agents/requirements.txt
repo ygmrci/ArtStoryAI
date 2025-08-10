@@ -1,0 +1,48 @@
+# ArtStoryAI Agents Package Requirements
+# Core dependencies for the agents system
+
+# Async support
+asyncio
+
+# Data handling
+dataclasses
+
+# Logging
+logging
+
+# Type hints
+typing
+
+# JSON handling
+json
+
+# Random number generation
+random
+
+# Date and time handling
+datetime
+
+# Note: These are built-in Python modules, so no external installation is needed
+# If you want to extend the agents with external APIs, add them here:
+
+# For OpenAI API integration (optional)
+# openai>=1.0.0
+
+# For HTTP requests (optional)
+# aiohttp>=3.8.0
+# requests>=2.28.0
+
+# For data processing (optional)
+# pandas>=1.5.0
+# numpy>=1.21.0
+
+# For image processing (optional)
+# Pillow>=9.0.0
+
+# For database operations (optional)
+# sqlalchemy>=1.4.0
+# asyncpg>=0.27.0
+
+# For caching (optional)
+# redis>=4.0.0
+# aioredis>=2.0.0 

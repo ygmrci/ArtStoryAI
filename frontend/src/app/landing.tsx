@@ -62,8 +62,12 @@ export default function Landing() {
 
       {/* İçerik */}
       <div
-        className="relative z-20 flex flex-col items-start justify-start px-8 pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
-        style={{ minHeight: '60vh' }}
+        className="relative z-20 flex flex-col items-start justify-start pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
+        style={{
+          minHeight: '60vh',
+          paddingLeft: '50px',
+          paddingRight: '50px',
+        }}
       >
         <h1 className="text-5xl font-serif font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">
           ArtStoryAI
@@ -79,22 +83,49 @@ export default function Landing() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Bir tablo adı yazın"
-            className="w-80 px-8 py-4 rounded-full bg-white text-black font-semibold shadow border-none text-lg"
+            placeholder="Bir tablo adı yazın örn: Mona Lisa"
+            className="w-[400px] px-20 py-10 rounded-full bg-white text-black font-semibold text-xl transition-all duration-300 hover:bg-white focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-400 placeholder:text-gray-500 shadow-2xl border-2 border-white/20 backdrop-blur-sm"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="px-8 py-4 rounded-full bg-indigo-600 text-white font-semibold text-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group relative px-12 py-6 rounded-full font-semibold text-xl transition-all duration-500 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)',
+              color: '#ffffff',
+              boxShadow: '0 8px 32px rgba(59, 130, 246, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(59, 130, 246, 0.6)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(59, 130, 246, 0.4)';
+              }
+            }}
           >
+            {/* Button Glow Effect */}
+            <div
+              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-110"
+              style={{
+                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)',
+                zIndex: -1,
+              }}
+            ></div>
+
             {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Aranıyor...
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span className="font-medium">Aranıyor...</span>
               </div>
             ) : (
-              'Ara'
+              <span className="relative z-10 font-bold">Ara</span>
             )}
           </button>
         </form>

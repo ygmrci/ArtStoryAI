@@ -60,7 +60,7 @@ pip install -r requirements.txt
 Backend klasöründe bir `.env` dosyası oluşturun ve aşağıdaki satırı ekleyin:
 
 ```
-OPENAI_API_KEY=sk-xxxxxx
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 - OpenAI API anahtarınızı [OpenAI platformundan](https://platform.openai.com/api-keys) alabilirsiniz.

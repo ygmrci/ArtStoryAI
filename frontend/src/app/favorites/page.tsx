@@ -68,10 +68,38 @@ export default function FavoritesPage() {
               </p>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-xl hover:bg-gray-100 transition-all duration-300 font-medium"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-medium transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff, #f1f5f9)',
+                  color: '#1e293b',
+                  boxShadow: '0 8px 32px rgba(255, 255, 255, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.3)';
+                }}
               >
-                <span>Keşfetmeye Başla</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {/* Button Glow Effect */}
+                <div
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-110"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff, #f1f5f9)',
+                    zIndex: -1,
+                  }}
+                ></div>
+
+                <span className="relative z-10 font-bold">Keşfetmeye Başla</span>
+                <svg
+                  className="w-5 h-5 relative z-10"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -100,10 +128,33 @@ export default function FavoritesPage() {
                             e.preventDefault();
                             removeFavorite(artwork.id);
                           }}
-                          className="absolute top-3 right-3 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                          className="group relative absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 transform hover:scale-110 opacity-0 group-hover:opacity-100"
+                          style={{
+                            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                            color: '#ffffff',
+                            boxShadow: '0 4px 20px rgba(239, 68, 68, 0.4)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.1)';
+                            e.currentTarget.style.boxShadow = '0 6px 25px rgba(239, 68, 68, 0.6)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.boxShadow = '0 4px 20px rgba(239, 68, 68, 0.4)';
+                          }}
                         >
+                          {/* Button Glow Effect */}
+                          <div
+                            className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg scale-110"
+                            style={{
+                              background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                              zIndex: -1,
+                            }}
+                          ></div>
+
                           <svg
-                            className="w-4 h-4"
+                            className="w-5 h-5 relative z-10"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

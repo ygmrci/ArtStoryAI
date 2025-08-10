@@ -181,7 +181,19 @@ export default function ArtworkClient({ artName }: { artName: string }) {
           <p className="text-gray-300 mb-6">{error}</p>
           <button
             onClick={() => router.back()}
-            className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            className="group relative bg-white text-black px-8 py-4 rounded-2xl font-medium transition-all duration-500 transform hover:-translate-y-1 hover:scale-105"
+            style={{
+              boxShadow: '0 4px 20px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 255, 255, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(255, 255, 255, 0.3)';
+            }}
           >
             Geri Dön
           </button>
@@ -213,7 +225,19 @@ export default function ArtworkClient({ artName }: { artName: string }) {
           <p className="text-gray-300 mb-6">{t('artwork.notFound')}</p>
           <button
             onClick={() => router.back()}
-            className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            className="group relative bg-white text-black px-8 py-4 rounded-2xl font-medium transition-all duration-500 transform hover:-translate-y-1 hover:scale-105"
+            style={{
+              boxShadow: '0 4px 20px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 255, 255, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(255, 255, 255, 0.3)';
+            }}
           >
             Geri Dön
           </button>
@@ -233,17 +257,21 @@ export default function ArtworkClient({ artName }: { artName: string }) {
         <div className="mb-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-xl hover:bg-gray-100 transition-all duration-300 font-medium"
+            className="group relative bg-white text-black px-8 py-4 rounded-2xl font-medium transition-all duration-500 transform hover:-translate-y-1 hover:scale-105"
+            style={{
+              boxShadow: '0 4px 20px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 255, 255, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(255, 255, 255, 0.3)';
+            }}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span>Geri Dön</span>
+            Geri Dön
           </button>
         </div>
 
