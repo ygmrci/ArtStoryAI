@@ -70,7 +70,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
       </button>
 
       {isOpen && (
-        <div className="voice-selector-dropdown absolute right-0 mt-2 w-48 bg-gradient-to-br from-[#667eea]/95 to-[#764ba2]/95 border border-[#764ba2]/40 rounded-lg shadow-2xl z-50 backdrop-blur-md">
+        <div className="voice-selector-dropdown absolute right-0 bottom-full mb-3 w-48 bg-gradient-to-br from-[#667eea]/95 to-[#764ba2]/95 border border-[#764ba2]/40 rounded-lg shadow-2xl z-[9999] backdrop-blur-md">
           <div className="py-1">
             {availableVoices.map((voice) => (
               <button
@@ -107,6 +107,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
       <style jsx>{`
         .voice-selector-main {
           position: relative;
+          z-index: 1000;
         }
 
         .voice-selector-btn {
@@ -138,6 +139,11 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
           border: 1px solid rgba(118, 75, 162, 0.4);
           backdrop-filter: blur(12px);
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          z-index: 9999;
+          position: absolute;
+          bottom: 100%;
+          right: 0;
+          margin-bottom: 12px;
         }
 
         .voice-selector-option {

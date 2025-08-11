@@ -87,37 +87,7 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
     <div className="min-h-screen bg-white">
       {/* Top Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="flex items-center justify-between px-4 py-3 lg:px-8 lg:py-4">
-          {/* Back Button */}
-          <button
-            onClick={() => router.back()}
-            className="group relative flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
-            style={{
-              background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-              color: '#475569',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-              border: '1px solid rgba(148, 163, 184, 0.2)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-            }}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span className="hidden sm:inline lg:text-base font-medium">Geri</span>
-          </button>
-
+        <div className="flex items-center justify-end px-4 py-3 lg:px-8 lg:py-4">
           {/* Right Controls */}
           <div className="flex items-center gap-3">
             {/* Share Button */}

@@ -253,35 +253,38 @@ export default function ArtworkClient({ artName }: { artName: string }) {
     >
       {/* Content */}
       <div className="p-4 md:p-6 lg:p-8" style={{ paddingTop: '120px' }}>
-        {/* Geri Dön Butonu */}
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="group relative bg-white text-black px-8 py-4 rounded-2xl font-medium transition-all duration-500 transform hover:-translate-y-1 hover:scale-105"
-            style={{
-              boxShadow: '0 4px 20px rgba(255, 255, 255, 0.3)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 6px 25px rgba(255, 255, 255, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(255, 255, 255, 0.3)';
-            }}
-          >
-            Geri Dön
-          </button>
-        </div>
-
         {/* Mobile Layout - Alt Alta */}
         <div className="md:hidden">
           {/* Artwork Image */}
           <div className="relative mb-4">
             <div className="relative overflow-hidden rounded-lg max-w-[300px] mx-auto">
               <img
-                src={artwork.image_url || '/globe.svg'}
+                src={(() => {
+                  const title = artwork.art_name.toLowerCase();
+
+                  // Manuel eklenen resimler için direkt kullan
+                  if (
+                    title.includes('cafe terrace') ||
+                    title.includes('kafe terasta') ||
+                    title.includes('kafe terasta gece')
+                  ) {
+                    return '/artworks/kafeTerastaGece.webp';
+                  } else if (
+                    title.includes('lady with an ermine') ||
+                    title.includes('lady with ermine')
+                  ) {
+                    return '/artworks/ladywithandermine.jpg';
+                  } else if (
+                    title.includes('sarı ev') ||
+                    title.includes('yellow house') ||
+                    title.includes('the yellow house')
+                  ) {
+                    return '/artworks/sarıev.jpg';
+                  } else {
+                    // Diğer eserler için AI resmini kullan
+                    return artwork.image_url || '/globe.svg';
+                  }
+                })()}
                 alt={artwork.art_name}
                 className="w-full h-32 object-cover"
                 style={{
@@ -290,7 +293,47 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                   minWidth: '200px !important',
                   minHeight: '80px !important',
                 }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/globe.svg';
+                }}
               />
+
+              {/* Favori Kalp İkonu - Sağ Üst */}
+              <div
+                className="absolute top-2 right-2 cursor-pointer transition-all duration-300"
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  zIndex: 9999,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  color: 'white',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                  border: '2px solid white',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.borderColor = 'white';
+                }}
+                onClick={handleLike}
+              >
+                {isLiked ? '💖' : '🤍'}
+              </div>
             </div>
           </div>
 
@@ -307,7 +350,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
           </div>
 
           {/* Description */}
-          <div className="bg-gray-900 rounded-xl p-4">
+          <div className="bg-gray-900 rounded-xl p-4" style={{ margin: '0 16px' }}>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-white">Eserin Hikayesi</h3>
               <AudioPlayer artName={artwork.art_name} story={artwork.story} className="scale-75" />
@@ -323,7 +366,32 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             <div className="relative">
               <div className="relative overflow-hidden rounded-lg">
                 <img
-                  src={artwork.image_url || '/globe.svg'}
+                  src={(() => {
+                    const title = artwork.art_name.toLowerCase();
+
+                    // Manuel eklenen resimler için direkt kullan
+                    if (
+                      title.includes('cafe terrace') ||
+                      title.includes('kafe terasta') ||
+                      title.includes('kafe terasta gece')
+                    ) {
+                      return '/artworks/kafeTerastaGece.webp';
+                    } else if (
+                      title.includes('lady with an ermine') ||
+                      title.includes('lady with ermine')
+                    ) {
+                      return '/artworks/ladywithandermine.jpg';
+                    } else if (
+                      title.includes('sarı ev') ||
+                      title.includes('yellow house') ||
+                      title.includes('the yellow house')
+                    ) {
+                      return '/artworks/sarıev.jpg';
+                    } else {
+                      // Diğer eserler için AI resmini kullan
+                      return artwork.image_url || '/globe.svg';
+                    }
+                  })()}
                   alt={artwork.art_name}
                   className="w-24 h-24 object-cover"
                   style={{
@@ -332,7 +400,47 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                     minWidth: '80px !important',
                     minHeight: '80px !important',
                   }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/globe.svg';
+                  }}
                 />
+
+                {/* Favori Kalp İkonu - Sağ Üst */}
+                <div
+                  className="absolute top-1 right-1 cursor-pointer transition-all duration-300"
+                  style={{
+                    position: 'absolute',
+                    top: '4px',
+                    right: '4px',
+                    zIndex: 9999,
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    borderRadius: '50%',
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '18px',
+                    color: 'white',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                    border: '2px solid white',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.borderColor = 'white';
+                  }}
+                  onClick={handleLike}
+                >
+                  {isLiked ? '💖' : '🤍'}
+                </div>
               </div>
             </div>
           </div>
@@ -351,7 +459,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             </div>
 
             {/* Description */}
-            <div className="bg-gray-900 rounded-xl p-6">
+            <div className="bg-gray-900 rounded-xl p-6" style={{ margin: '0 16px' }}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-white">Eserin Hikayesi</h3>
                 <AudioPlayer artName={artwork.art_name} story={artwork.story} />
@@ -368,7 +476,32 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             <div className="relative">
               <div className="relative overflow-hidden rounded-lg">
                 <img
-                  src={artwork.image_url || '/globe.svg'}
+                  src={(() => {
+                    const title = artwork.art_name.toLowerCase();
+
+                    // Manuel eklenen resimler için direkt kullan
+                    if (
+                      title.includes('cafe terrace') ||
+                      title.includes('kafe terasta') ||
+                      title.includes('kafe terasta gece')
+                    ) {
+                      return '/artworks/kafeTerastaGece.webp';
+                    } else if (
+                      title.includes('lady with an ermine') ||
+                      title.includes('lady with ermine')
+                    ) {
+                      return '/artworks/ladywithandermine.jpg';
+                    } else if (
+                      title.includes('sarı ev') ||
+                      title.includes('yellow house') ||
+                      title.includes('the yellow house')
+                    ) {
+                      return '/artworks/sarıev.jpg';
+                    } else {
+                      // Diğer eserler için AI resmini kullan
+                      return artwork.image_url || '/globe.svg';
+                    }
+                  })()}
                   alt={artwork.art_name}
                   className="w-28 h-28 object-cover"
                   style={{
@@ -377,7 +510,47 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                     minWidth: '100px !important',
                     minHeight: '100px !important',
                   }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/globe.svg';
+                  }}
                 />
+
+                {/* Favori Kalp İkonu - Sağ Üst */}
+                <div
+                  className="absolute top-2 right-2 cursor-pointer transition-all duration-300"
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    zIndex: 9999,
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                    color: 'white',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                    border: '2px solid white',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.borderColor = 'white';
+                  }}
+                  onClick={handleLike}
+                >
+                  {isLiked ? '💖' : '🤍'}
+                </div>
               </div>
             </div>
           </div>
@@ -396,7 +569,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             </div>
 
             {/* Description */}
-            <div className="bg-gray-900 rounded-xl p-4">
+            <div className="bg-gray-900 rounded-xl p-4" style={{ margin: '0 16px' }}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-bold text-white">Eserin Hikayesi</h3>
                 <AudioPlayer

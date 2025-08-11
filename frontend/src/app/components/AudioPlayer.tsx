@@ -123,7 +123,7 @@ export default function AudioPlayer({ artName, story, className = '' }: AudioPla
   }, [audioUrl]);
 
   return (
-    <div className={`flex items-center gap-4 ${className}`}>
+    <div className={`flex items-center gap-4 -ml-5 ${className}`} >
       {/* Ses Türü Seçici */}
       <div className="relative">
         <button
@@ -157,7 +157,7 @@ export default function AudioPlayer({ artName, story, className = '' }: AudioPla
 
         {/* Ses Türü Dropdown */}
         {showVoiceSelector && (
-          <div className="absolute top-full left-0 mt-1 bg-gray-800 rounded-lg shadow-lg border border-white/10 z-50 min-w-[200px]">
+          <div className="absolute bottom-full left-0 mb-3 bg-gray-800 rounded-lg shadow-lg border border-white/10 z-[9999] min-w-[200px]">
             {voices.map((voice) => (
               <button
                 key={voice.id}

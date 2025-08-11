@@ -83,7 +83,7 @@ export default function Landing() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Bir tablo adı yazın örn: Mona Lisa"
+            placeholder="Bir tablo adı yazın  örn: Mona Lisa"
             className="w-[400px] px-20 py-10 rounded-full bg-white text-black font-semibold text-xl transition-all duration-300 hover:bg-white focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-400 placeholder:text-gray-500 shadow-2xl border-2 border-white/20 backdrop-blur-sm"
             disabled={isLoading}
           />
