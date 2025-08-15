@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import SimilarArtworks from '../../components/SimilarArtworks';
 import AudioPlayer from '../../components/AudioPlayer';
+import { useFavorites } from '../../contexts/FavoritesContext';
 
 interface SimilarArtwork {
   title: string;
@@ -31,7 +32,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [likes, setLikes] = useState(124);
-  const [isLiked, setIsLiked] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const { t } = useTranslation();
   const router = useRouter();
@@ -48,12 +49,6 @@ export default function ArtworkClient({ artName }: { artName: string }) {
         }
         const data = await res.json();
         setArtwork(data);
-
-        // Favori durumunu kontrol et
-        const savedFavorites = localStorage.getItem('favorites') || '[]';
-        const favorites = JSON.parse(savedFavorites);
-        const isInFavorites = favorites.some((fav: any) => fav.id === data.art_name);
-        setIsLiked(isInFavorites);
       } catch (err) {
         setError(t('artwork.fetchError'));
         console.error(err);
@@ -68,32 +63,15 @@ export default function ArtworkClient({ artName }: { artName: string }) {
   const handleLike = () => {
     if (!artwork) return;
 
-    const newIsLiked = !isLiked;
-    setIsLiked(newIsLiked);
-    setLikes(newIsLiked ? likes + 1 : likes - 1);
+    const favoriteArtwork = {
+      id: artwork.art_name,
+      art_name: artwork.art_name,
+      artist: artwork.artist,
+      year: artwork.year,
+      image_url: artwork.image_url,
+    };
 
-    // LocalStorage'a kaydet
-    const savedFavorites = localStorage.getItem('favorites') || '[]';
-    const favorites = JSON.parse(savedFavorites);
-
-    if (newIsLiked) {
-      // Favorilere ekle
-      const newFavorite = {
-        id: artwork.art_name, // Unique ID olarak eser adını kullan
-        art_name: artwork.art_name,
-        artist: artwork.artist,
-        year: artwork.year,
-        image_url: artwork.image_url,
-      };
-      favorites.push(newFavorite);
-    } else {
-      // Favorilerden çıkar
-      const updatedFavorites = favorites.filter((fav: any) => fav.id !== artwork.art_name);
-      favorites.length = 0;
-      favorites.push(...updatedFavorites);
-    }
-
-    localStorage.setItem('favorites', JSON.stringify(favorites));
+    toggleFavorite(favoriteArtwork);
   };
 
   const handleShare = () => {
@@ -280,9 +258,25 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                     title.includes('the yellow house')
                   ) {
                     return '/artworks/sarıev.jpg';
+                  } else if (title.includes('sunflowers') || title.includes('ayçiçekleri')) {
+                    return '/artworks/sunflowers.jpg';
+                  } else if (title.includes('the milkmaid') || title.includes('sütçü kız')) {
+                    return '/artworks/themilkmaid.jpg';
+                  } else if (title.includes('guernica')) {
+                    return '/artworks/Picasso_Guernica.jpg';
+                  } else if (
+                    title.includes('avignonlu kızlar') ||
+                    title.includes("les demoiselles d'avignon")
+                  ) {
+                    return '/artworks/avignonluKızlar.jpg';
+                  } else if (title.includes('weeping woman') || title.includes('ağlayan kadın')) {
+                    return '/artworks/Weeping-woman.jpg';
                   } else {
-                    // Diğer eserler için AI resmini kullan
-                    return artwork.image_url || '/globe.svg';
+                    // Diğer eserler için backend'den gelen resmi kullan
+                    return (
+                      artwork.image_url ||
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png'
+                    );
                   }
                 })()}
                 alt={artwork.art_name}
@@ -295,7 +289,8 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                 }}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/globe.svg';
+                  target.src =
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
                 }}
               />
 
@@ -332,7 +327,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                 }}
                 onClick={handleLike}
               >
-                {isLiked ? '💖' : '🤍'}
+                {isFavorite(artwork.art_name) ? '💖' : '🤍'}
               </div>
             </div>
           </div>
@@ -387,9 +382,25 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                       title.includes('the yellow house')
                     ) {
                       return '/artworks/sarıev.jpg';
+                    } else if (title.includes('sunflowers') || title.includes('ayçiçekleri')) {
+                      return '/artworks/sunflowers.jpg';
+                    } else if (title.includes('the milkmaid') || title.includes('sütçü kız')) {
+                      return '/artworks/themilkmaid.jpg';
+                    } else if (title.includes('guernica')) {
+                      return '/artworks/Picasso_Guernica.jpg';
+                    } else if (
+                      title.includes('avignonlu kızlar') ||
+                      title.includes("les demoiselles d'avignon")
+                    ) {
+                      return '/artworks/avignonluKızlar.jpg';
+                    } else if (title.includes('weeping woman') || title.includes('ağlayan kadın')) {
+                      return '/artworks/Weeping-woman.jpg';
                     } else {
-                      // Diğer eserler için AI resmini kullan
-                      return artwork.image_url || '/globe.svg';
+                      // Diğer eserler için backend'den gelen resmi kullan
+                      return (
+                        artwork.image_url ||
+                        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png'
+                      );
                     }
                   })()}
                   alt={artwork.art_name}
@@ -402,7 +413,8 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                   }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = '/globe.svg';
+                    target.src =
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
                   }}
                 />
 
@@ -439,7 +451,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                   }}
                   onClick={handleLike}
                 >
-                  {isLiked ? '💖' : '🤍'}
+                  {isFavorite(artwork.art_name) ? '💖' : '🤍'}
                 </div>
               </div>
             </div>
@@ -549,7 +561,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                   }}
                   onClick={handleLike}
                 >
-                  {isLiked ? '💖' : '🤍'}
+                  {isFavorite(artwork.art_name) ? '💖' : '🤍'}
                 </div>
               </div>
             </div>

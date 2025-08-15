@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Header from './components/Header';
+import { FavoritesProvider } from './contexts/FavoritesContext';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
@@ -35,17 +36,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body
-        className="bg-black min-h-screen font-body text-white"
-        style={{ backgroundColor: '#000000 !important' }}
-      >
-        {children}
+      <body>
+        <FavoritesProvider>{children}</FavoritesProvider>
       </body>
     </html>
   );

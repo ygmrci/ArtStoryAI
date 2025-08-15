@@ -9,6 +9,7 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { ShareIcon } from '@heroicons/react/24/outline';
 import { EyeIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 interface ArtworkData {
   art_name: string;
@@ -31,33 +32,18 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const [likes, setLikes] = useState(124);
-  const [isLiked, setIsLiked] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleLike = () => {
-    const newIsLiked = !isLiked;
-    setIsLiked(newIsLiked);
-    setLikes(newIsLiked ? likes + 1 : likes - 1);
+    const favoriteArtwork = {
+      id: artwork.art_name,
+      art_name: artwork.art_name,
+      artist: artwork.artist,
+      year: artwork.year,
+      image_url: artwork.image_url,
+    };
 
-    // LocalStorage'a kaydet
-    const savedFavorites = localStorage.getItem('favorites') || '[]';
-    const favorites = JSON.parse(savedFavorites);
-
-    if (newIsLiked) {
-      const newFavorite = {
-        id: artwork.art_name,
-        art_name: artwork.art_name,
-        artist: artwork.artist,
-        year: artwork.year,
-        image_url: artwork.image_url,
-      };
-      favorites.push(newFavorite);
-    } else {
-      const updatedFavorites = favorites.filter((fav: any) => fav.id !== artwork.art_name);
-      favorites.length = 0;
-      favorites.push(...updatedFavorites);
-    }
-
-    localStorage.setItem('favorites', JSON.stringify(favorites));
+    toggleFavorite(favoriteArtwork);
   };
 
   const handleShare = () => {
@@ -125,20 +111,20 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
               onClick={handleLike}
               className="group relative p-3 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
               style={{
-                background: isLiked
+                background: isFavorite(artwork.art_name)
                   ? 'linear-gradient(135deg, #ef4444, #dc2626)'
                   : 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-                color: isLiked ? '#ffffff' : '#475569',
-                boxShadow: isLiked
+                color: isFavorite(artwork.art_name) ? '#ffffff' : '#475569',
+                boxShadow: isFavorite(artwork.art_name)
                   ? '0 2px 10px rgba(239, 68, 68, 0.4)'
                   : '0 2px 10px rgba(0, 0, 0, 0.1)',
-                border: isLiked
+                border: isFavorite(artwork.art_name)
                   ? '1px solid rgba(239, 68, 68, 0.3)'
                   : '1px solid rgba(148, 163, 184, 0.2)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
-                if (isLiked) {
+                if (isFavorite(artwork.art_name)) {
                   e.currentTarget.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.5)';
                 } else {
                   e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.15)';
@@ -146,7 +132,7 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                if (isLiked) {
+                if (isFavorite(artwork.art_name)) {
                   e.currentTarget.style.boxShadow = '0 2px 10px rgba(239, 68, 68, 0.4)';
                 } else {
                   e.currentTarget.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
@@ -162,7 +148,7 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              {isLiked && (
+              {isFavorite(artwork.art_name) && (
                 <svg
                   className="w-5 h-5 absolute inset-0 text-red-500"
                   fill="currentColor"

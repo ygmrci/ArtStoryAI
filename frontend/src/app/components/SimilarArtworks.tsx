@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 interface SimilarArtwork {
   title: string;
@@ -23,29 +24,50 @@ export default function SimilarArtworks({
   currentArtist,
 }: SimilarArtworksProps) {
   const router = useRouter();
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
   const handleArtworkClick = (artworkTitle: string) => {
     router.push(`/artwork/${encodeURIComponent(artworkTitle)}`);
   };
 
-  const handleFavoriteClick = (artworkTitle: string, e: React.MouseEvent) => {
+  const handleFavoriteClick = (artwork: SimilarArtwork, e: React.MouseEvent) => {
     e.stopPropagation(); // Kart tıklamasını engelle
 
-    setFavorites((prev) => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(artworkTitle)) {
-        newFavorites.delete(artworkTitle);
-      } else {
-        newFavorites.add(artworkTitle);
-      }
-      return newFavorites;
-    });
+    const favoriteArtwork = {
+      id: artwork.title, // title'ı ID olarak kullan
+      art_name: artwork.title,
+      artist: artwork.artist,
+      year: parseInt(artwork.year) || 0,
+      image_url: artwork.image_url,
+    };
+
+    toggleFavorite(favoriteArtwork);
   };
 
-  const isFavorite = (artworkTitle: string) => {
-    return favorites.has(artworkTitle);
-  };
+  // Her zaman 3 eser göster
+  const displayArtworks = artworks && artworks.length > 0 ? artworks : [];
+
+  // Eğer 3'ten az eser varsa, placeholder eserler ekle
+  const placeholderArtworks = [
+    {
+      title: 'Sanat Eseri',
+      artist: 'Bilinmeyen Sanatçı',
+      year: 'N/A',
+      image_url:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png',
+      similarity_reason: 'Genel sanat eseri',
+    },
+  ];
+
+  // Toplam 3 eser olacak şekilde düzenle
+  const finalArtworks = [];
+  for (let i = 0; i < 3; i++) {
+    if (i < displayArtworks.length) {
+      finalArtworks.push(displayArtworks[i]);
+    } else {
+      finalArtworks.push(placeholderArtworks[0]);
+    }
+  }
 
   if (!artworks || artworks.length === 0) {
     return null;
@@ -104,166 +126,168 @@ export default function SimilarArtworks({
         className="flex flex-row flex-wrap justify-around items-stretch"
         style={{ margin: '8px 8px 0 8px' }}
       >
-        {artworks.map((artwork, index) => {
-          console.log(`Kart ${index + 1}:`, {
-            title: artwork.title,
-            artist: artwork.artist,
-            year: artwork.year,
-            similarity_reason: artwork.similarity_reason,
-          });
-
-          return (
+        {finalArtworks.map((artwork, index) => (
+          <div
+            key={index}
+            onClick={() => handleArtworkClick(artwork.title)}
+            className="group cursor-pointer rounded-3xl transition-all duration-500 flex flex-col"
+            style={{
+              width: '300px',
+              minHeight: '550px',
+              flex: '0 0 300px',
+              background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
+              borderRadius: '24px',
+              backdropFilter: 'blur(10px)',
+              transform: 'translateY(0) scale(1)',
+              transition: 'all 0.5s ease',
+              overflow: 'visible',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background =
+                'linear-gradient(135deg, rgba(55, 65, 81, 0.9), rgba(31, 41, 55, 0.9))';
+              e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.5)';
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))';
+              e.currentTarget.style.borderColor = 'rgba(75, 85, 99, 0.3)';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            {/* Resim Alanı - Sabit yükseklik */}
             <div
-              key={index}
-              onClick={() => handleArtworkClick(artwork.title)}
-              className="group cursor-pointer rounded-3xl transition-all duration-500 flex flex-col"
+              className="relative overflow-hidden flex-shrink-0"
               style={{
-                width: '300px',
-                minHeight: '550px',
-                flex: '0 0 300px',
-                background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
-                border: '2px solid blue',
-                borderRadius: '24px',
-                backdropFilter: 'blur(10px)',
-                transform: 'translateY(0) scale(1)',
-                transition: 'all 0.5s ease',
-                overflow: 'visible',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, rgba(55, 65, 81, 0.9), rgba(31, 41, 55, 0.9))';
-                e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.5)';
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))';
-                e.currentTarget.style.borderColor = 'rgba(75, 85, 99, 0.3)';
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = 'none';
+                height: '260px',
+                minHeight: '260px',
+                maxHeight: '260px',
+                borderTopLeftRadius: '24px',
+                borderTopRightRadius: '24px',
               }}
             >
-              {/* Resim Alanı - Sabit yükseklik */}
-              <div
-                className="relative overflow-hidden flex-shrink-0"
+              <img
+                src={(() => {
+                  const title = artwork.title.toLowerCase();
+
+                  // Manuel eklenen resimler için direkt kullan
+                  if (
+                    title.includes('cafe terrace') ||
+                    title.includes('kafe terasta') ||
+                    title.includes('kafe terasta gece')
+                  ) {
+                    return '/artworks/kafeTerastaGece.webp';
+                  } else if (
+                    title.includes('lady with an ermine') ||
+                    title.includes('lady with ermine')
+                  ) {
+                    return '/artworks/ladywithandermine.jpg';
+                  } else if (
+                    title.includes('sarı ev') ||
+                    title.includes('yellow house') ||
+                    title.includes('the yellow house')
+                  ) {
+                    return '/artworks/sarıev.jpg';
+                  } else if (title.includes('sunflowers') || title.includes('ayçiçekleri')) {
+                    return '/artworks/sunflowers.jpg';
+                  } else if (title.includes('the milkmaid') || title.includes('sütçü kız')) {
+                    return '/artworks/themilkmaid.jpg';
+                  } else if (title.includes('guernica')) {
+                    return '/artworks/Picasso_Guernica.jpg';
+                  } else if (
+                    title.includes('avignonlu kızlar') ||
+                    title.includes("les demoiselles d'avignon")
+                  ) {
+                    return '/artworks/avignonluKızlar.jpg';
+                  } else if (title.includes('weeping woman') || title.includes('ağlayan kadın')) {
+                    return '/artworks/Weeping-woman.jpg';
+                  } else {
+                    // Diğer eserler için AI resmini kullan
+                    return artwork.image_url;
+                  }
+                })()}
+                alt={artwork.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 style={{
-                  height: '260px',
-                  minHeight: '260px',
-                  maxHeight: '260px',
-                  borderTopLeftRadius: '24px',
-                  borderTopRightRadius: '24px',
+                  objectPosition: 'center center',
+                  objectFit: 'cover',
                 }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src =
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
+                }}
+              />
+
+              {/* Favori Kalp İkonu - Sağ Üst */}
+              <div
+                className="absolute top-2 right-2 cursor-pointer transition-all duration-300"
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  zIndex: 9999,
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  color: 'white',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                  border: '2px solid white',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.borderColor = 'white';
+                }}
+                onClick={(e) => handleFavoriteClick(artwork, e)}
               >
-                <img
-                  src={(() => {
-                    const title = artwork.title.toLowerCase();
-
-                    // Manuel eklenen resimler için direkt kullan
-                    if (
-                      title.includes('cafe terrace') ||
-                      title.includes('kafe terasta') ||
-                      title.includes('kafe terasta gece')
-                    ) {
-                      return '/artworks/kafeTerastaGece.webp';
-                    } else if (
-                      title.includes('lady with an ermine') ||
-                      title.includes('lady with ermine')
-                    ) {
-                      return '/artworks/ladywithandermine.jpg';
-                    } else if (
-                      title.includes('sarı ev') ||
-                      title.includes('yellow house') ||
-                      title.includes('the yellow house')
-                    ) {
-                      return '/artworks/sarıev.jpg';
-                    } else {
-                      // Diğer eserler için AI resmini kullan
-                      return artwork.image_url;
-                    }
-                  })()}
-                  alt={artwork.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  style={{
-                    objectPosition: 'center center',
-                    objectFit: 'cover',
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src =
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
-                  }}
-                />
-
-                {/* Favori Kalp İkonu - Sağ Üst */}
-                <div
-                  className="absolute top-2 right-2 cursor-pointer transition-all duration-300"
-                  style={{
-                    position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    zIndex: 9999,
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '24px',
-                    color: 'white',
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                    border: '2px solid white',
-                    transition: 'all 0.3s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)';
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.borderColor = 'white';
-                  }}
-                  onClick={(e) => handleFavoriteClick(artwork.title, e)}
-                >
-                  {isFavorite(artwork.title) ? '💖' : '🤍'}
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {isFavorite(artwork.title) ? '💖' : '🤍'}
               </div>
 
-              {/* İçerik Alanı - Kalan alanı doldur */}
-              <div
-                className="p-3 sm:p-4 relative flex-1 flex flex-col justify-between"
-                style={{
-                  zIndex: 10,
-                  border: '1px solid transparent',
-                  minHeight: '140px',
-                  maxHeight: '180px',
-                }}
-              >
-                <div>
-                  <h4 className="text-sm sm:text-base font-semibold text-white mb-2 group-hover:text-yellow-300 transition-colors truncate">
-                    {artwork.title}
-                  </h4>
-                  <div className="space-y-1">
-                    <p className="text-gray-300 text-xs sm:text-sm truncate">{artwork.artist}</p>
-                    <p className="text-xs sm:text-sm truncate" style={{ color: '#9ca3af' }}>
-                      {artwork.year}
-                    </p>
-                  </div>
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
 
-                {/* Benzerlik Sebebi */}
-                <div className="mt-2 pt-2 border-t border-white/10">
-                  <p className="text-xs text-gray-400 truncate">{artwork.similarity_reason}</p>
+            {/* İçerik Alanı - Kalan alanı doldur */}
+            <div
+              className="p-3 sm:p-4 relative flex-1 flex flex-col justify-between"
+              style={{
+                zIndex: 10,
+                minHeight: '140px',
+                maxHeight: '180px',
+              }}
+            >
+              <div>
+                <h4 className="text-sm sm:text-base font-semibold text-white mb-2 group-hover:text-yellow-300 transition-colors truncate">
+                  {artwork.title}
+                </h4>
+                <div className="space-y-1">
+                  <p className="text-gray-300 text-xs sm:text-sm truncate">{artwork.artist}</p>
+                  <p className="text-xs sm:text-sm truncate" style={{ color: '#9ca3af' }}>
+                    {artwork.year}
+                  </p>
                 </div>
+              </div>
+
+              {/* Benzerlik Sebebi */}
+              <div className="mt-2 pt-2 border-t border-white/10">
+                <p className="text-xs text-gray-400 truncate">{artwork.similarity_reason}</p>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

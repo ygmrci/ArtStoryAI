@@ -3,31 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '../components/Header';
-
-interface FavoriteArtwork {
-  id: string;
-  art_name: string;
-  artist: string;
-  year: number;
-  image_url: string;
-}
+import { useFavorites } from '../contexts/FavoritesContext';
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<FavoriteArtwork[]>([]);
-
-  useEffect(() => {
-    // LocalStorage'dan favorileri yükle
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-  }, []);
-
-  const removeFavorite = (artworkId: string) => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== artworkId);
-    setFavorites(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-  };
+  const { favorites, removeFavorite } = useFavorites();
 
   return (
     <>
@@ -37,14 +16,20 @@ export default function FavoritesPage() {
           {/* Başlık */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-white mb-4">Favorilerim</h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-lg mb-4">
               {favorites.length === 0
                 ? 'Henüz favori eser eklemediniz'
                 : `${favorites.length} favori eser bulunuyor`}
             </p>
+            {favorites.length === 0 && (
+              <p className="text-gray-500 text-sm max-w-2xl mx-auto">
+                Favori eser eklemek için sanat eseri sayfalarında kalp ikonuna tıklayın veya arama
+                yaparak eser bulun.
+              </p>
+            )}
           </div>
 
-          {/* Favori Eserler Grid */}
+          {/* Favori Eserler Grid - SimilarArtworks Stili */}
           {favorites.length === 0 ? (
             <div className="text-center py-16">
               <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -110,76 +95,148 @@ export default function FavoritesPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="flex flex-row flex-wrap justify-around items-stretch" style={{ margin: '8px 8px 0 8px' }}>
               {favorites.map((artwork) => (
-                <div key={artwork.id} className="group relative">
-                  <Link href={`/artwork/${encodeURIComponent(artwork.art_name)}`}>
-                    <div className="bg-gray-900 rounded-2xl overflow-hidden hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl">
-                      {/* Resim */}
-                      <div className="relative aspect-square overflow-hidden">
-                        <img
-                          src={artwork.image_url || '/globe.svg'}
-                          alt={artwork.art_name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        {/* Favori Kaldır Butonu */}
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            removeFavorite(artwork.id);
-                          }}
-                          className="group relative absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 transform hover:scale-110 opacity-0 group-hover:opacity-100"
-                          style={{
-                            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                            color: '#ffffff',
-                            boxShadow: '0 4px 20px rgba(239, 68, 68, 0.4)',
-                            border: '1px solid rgba(239, 68, 68, 0.3)',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.1)';
-                            e.currentTarget.style.boxShadow = '0 6px 25px rgba(239, 68, 68, 0.6)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1)';
-                            e.currentTarget.style.boxShadow = '0 4px 20px rgba(239, 68, 68, 0.4)';
-                          }}
-                        >
-                          {/* Button Glow Effect */}
-                          <div
-                            className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg scale-110"
-                            style={{
-                              background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                              zIndex: -1,
-                            }}
-                          ></div>
+                <div
+                  key={artwork.id}
+                  className="group cursor-pointer rounded-3xl transition-all duration-500 flex flex-col"
+                  style={{
+                    width: '300px',
+                    minHeight: '550px',
+                    flex: '0 0 300px',
+                    background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
+                    borderRadius: '24px',
+                    backdropFilter: 'blur(10px)',
+                    transform: 'translateY(0) scale(1)',
+                    transition: 'all 0.5s ease',
+                    overflow: 'visible',
+                    margin: '8px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, rgba(55, 65, 81, 0.9), rgba(31, 41, 55, 0.9))';
+                    e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.5)';
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))';
+                    e.currentTarget.style.borderColor = 'rgba(75, 85, 99, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  {/* Resim Alanı */}
+                  <div
+                    className="relative overflow-hidden flex-shrink-0"
+                    style={{
+                      height: '260px',
+                      minHeight: '260px',
+                      maxHeight: '260px',
+                      borderTopLeftRadius: '24px',
+                      borderTopRightRadius: '24px',
+                    }}
+                  >
+                    <img
+                      src={artwork.image_url || '/globe.svg'}
+                      alt={artwork.art_name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      style={{
+                        objectPosition: 'center center',
+                        objectFit: 'cover',
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src =
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
+                      }}
+                    />
 
-                          <svg
-                            className="w-5 h-5 relative z-10"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
+                    {/* Favori Kaldır Butonu - Sağ Üst */}
+                    <div
+                      className="absolute top-2 right-2 cursor-pointer transition-all duration-300"
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        zIndex: 9999,
+                        backgroundColor: 'rgba(220, 38, 38, 0.9)',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '24px',
+                        color: 'white',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                        border: '2px solid rgba(220, 38, 38, 0.8)',
+                        transition: 'all 0.3s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(185, 28, 28, 0.9)';
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.borderColor = 'rgba(185, 28, 28, 0.8)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                      }}
+                      onClick={() => removeFavorite(artwork.id)}
+                      title="Favorilerden kaldır"
+                    >
+                      ❌
+                    </div>
 
-                      {/* Bilgiler */}
-                      <div className="p-4">
-                        <h3 className="text-white font-semibold text-lg mb-1 truncate">
-                          {artwork.art_name}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                          {artwork.artist}, {artwork.year}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* İçerik Alanı */}
+                  <div
+                    className="p-3 sm:p-4 relative flex-1 flex flex-col justify-between"
+                    style={{
+                      zIndex: 10,
+                      minHeight: '140px',
+                      maxHeight: '180px',
+                    }}
+                  >
+                    <div>
+                      <h4 className="text-sm sm:text-base font-semibold text-white mb-2 group-hover:text-yellow-300 transition-colors truncate">
+                        {artwork.art_name}
+                      </h4>
+                      <div className="space-y-1">
+                        <p className="text-gray-300 text-xs sm:text-sm truncate">{artwork.artist}</p>
+                        <p className="text-xs sm:text-sm truncate" style={{ color: '#9ca3af' }}>
+                          {artwork.year}
                         </p>
                       </div>
                     </div>
-                  </Link>
+
+                    {/* Detay Görüntüleme Linki */}
+                    <div className="mt-2 pt-2 border-t border-white/10">
+                      <Link
+                        href={`/artwork/${encodeURIComponent(artwork.art_name)}`}
+                        className="text-xs text-yellow-400 hover:text-yellow-300 transition-colors duration-200 inline-flex items-center gap-1 group/link"
+                      >
+                        <span>Detayları Gör</span>
+                        <svg
+                          className="w-3 h-3 transition-transform duration-200 group-hover/link:translate-x-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

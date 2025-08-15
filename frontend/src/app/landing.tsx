@@ -51,7 +51,10 @@ export default function Landing() {
 
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center">
+        <div
+          className="absolute inset-0 bg-black/80 flex items-center justify-center"
+          style={{ zIndex: 100 }}
+        >
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4"></div>
             <p className="text-white text-xl font-semibold">Eser aranıyor...</p>
@@ -62,11 +65,12 @@ export default function Landing() {
 
       {/* İçerik */}
       <div
-        className="relative z-20 flex flex-col items-start justify-start pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
+        className="relative flex flex-col items-start justify-start pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
         style={{
           minHeight: '60vh',
           paddingLeft: '50px',
           paddingRight: '50px',
+          zIndex: 1,
         }}
       >
         <h1 className="text-5xl font-serif font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">
