@@ -273,6 +273,10 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                     return '/artworks/Weeping-woman.jpg';
                   } else {
                     // Diğer eserler için backend'den gelen resmi kullan
+                    // Eğer backend'den manuel resim URL'si geliyorsa, tam URL yap
+                    if (artwork.image_url && artwork.image_url.startsWith('/manual-images/')) {
+                      return `http://127.0.0.1:8000${artwork.image_url}`;
+                    }
                     return (
                       artwork.image_url ||
                       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png'

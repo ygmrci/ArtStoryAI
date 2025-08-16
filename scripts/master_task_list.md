@@ -99,10 +99,10 @@
 
 ### 3.7. Veritabanı
 
-- [ ] PostgreSQL bağlantısını kur
-- [ ] Sanat eserleri ve kullanıcı verileri için temel tabloları oluştur
-- [ ] ORM (SQLAlchemy) ile modelleri yaz
-- [ ] Migration altyapısı kur
+- [x] PostgreSQL bağlantısını kur
+- [x] Sanat eserleri ve kullanıcı verileri için temel tabloları oluştur
+- [x] ORM (SQLAlchemy) ile modelleri yaz
+- [x] Migration altyapısı kur
 
 ### 3.8. Hata Yönetimi & Loglama
 

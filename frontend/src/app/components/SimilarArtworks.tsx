@@ -205,6 +205,10 @@ export default function SimilarArtworks({
                     return '/artworks/Weeping-woman.jpg';
                   } else {
                     // Diğer eserler için AI resmini kullan
+                    // Eğer backend'den manuel resim URL'si geliyorsa, tam URL yap
+                    if (artwork.image_url && artwork.image_url.startsWith('/manual-images/')) {
+                      return `http://127.0.0.1:8000${artwork.image_url}`;
+                    }
                     return artwork.image_url;
                   }
                 })()}
