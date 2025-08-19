@@ -240,7 +240,7 @@ export default function ArtworkDetail({ artwork }: ArtworkDetailProps) {
         <div className="px-4 py-4 lg:py-6 flex items-center justify-between max-w-4xl mx-auto">
           {/* Audio Player */}
           <div className="flex items-center gap-2">
-            <AudioPlayer artName={artwork.art_name} story={artwork.story} />
+            <AudioPlayer text={artwork.story} artName={artwork.art_name} />
           </div>
 
           {/* Language Switcher */}

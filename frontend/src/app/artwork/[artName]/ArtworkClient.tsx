@@ -352,7 +352,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
           <div className="bg-gray-900 rounded-xl p-4" style={{ margin: '0 16px' }}>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-white">Eserin Hikayesi</h3>
-              <AudioPlayer artName={artwork.art_name} story={artwork.story} className="scale-75" />
+              <AudioPlayer text={artwork.story} artName={artwork.art_name} className="scale-75" />
             </div>
             <p className="text-gray-300 leading-relaxed text-sm">{artwork.story}</p>
           </div>
@@ -478,7 +478,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             <div className="bg-gray-900 rounded-xl p-6" style={{ margin: '0 16px' }}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-white">Eserin Hikayesi</h3>
-                <AudioPlayer artName={artwork.art_name} story={artwork.story} />
+                <AudioPlayer text={artwork.story} artName={artwork.art_name} />
               </div>
               <p className="text-gray-300 leading-relaxed">{artwork.story}</p>
             </div>
@@ -588,11 +588,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             <div className="bg-gray-900 rounded-xl p-4" style={{ margin: '0 16px' }}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-bold text-white">Eserin Hikayesi</h3>
-                <AudioPlayer
-                  artName={artwork.art_name}
-                  story={artwork.story}
-                  className="scale-90"
-                />
+                <AudioPlayer text={artwork.story} artName={artwork.art_name} className="scale-90" />
               </div>
               <p className="text-gray-300 leading-relaxed text-sm">{artwork.story}</p>
             </div>
@@ -601,9 +597,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
       </div>
 
       {/* Benzer Eserler */}
-      {artwork.similar_artworks && artwork.similar_artworks.length > 0 && (
-        <SimilarArtworks artworks={artwork.similar_artworks} currentArtwork={artwork.art_name} />
-      )}
+      <SimilarArtworks currentArtwork={artwork.art_name} />
     </div>
   );
 }

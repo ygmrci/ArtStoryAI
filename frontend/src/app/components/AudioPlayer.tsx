@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface AudioPlayerProps {
   artName: string;
-  story: string;
+  text: string;
   className?: string;
 }
 
@@ -14,7 +14,7 @@ interface Voice {
   description: string;
 }
 
-export default function AudioPlayer({ artName, story, className = '' }: AudioPlayerProps) {
+export default function AudioPlayer({ artName, text, className = '' }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -39,10 +39,17 @@ export default function AudioPlayer({ artName, story, className = '' }: AudioPla
   };
 
   const generateAudio = async () => {
-    if (!story || isLoading) return;
+    console.log('🔍 generateAudio called with:', { text, textLength: text?.length, isLoading });
+
+    if (!text || isLoading) {
+      console.log('❌ generateAudio early return:', { hasText: !!text, isLoading });
+      return;
+    }
 
     setIsLoading(true);
     try {
+      console.log('🎵 API çağrısı başlatılıyor:', { artName, text, voice: selectedVoice });
+
       const response = await fetch('http://localhost:8000/audio/story', {
         method: 'POST',
         headers: {
@@ -50,33 +57,52 @@ export default function AudioPlayer({ artName, story, className = '' }: AudioPla
         },
         body: JSON.stringify({
           art_name: artName,
-          story: story,
+          story: text,
           voice: selectedVoice,
         }),
       });
 
       const data = await response.json();
+      console.log('📡 API Response:', { status: response.status, data });
 
-      if (data.success && data.audio_data) {
-        // Base64 audio data'yı blob'a çevir
-        const audioBlob = new Blob(
-          [Uint8Array.from(atob(data.audio_data), (c) => c.charCodeAt(0))],
-          { type: 'audio/mp3' },
-        );
-        const url = URL.createObjectURL(audioBlob);
-        setAudioUrl(url);
+      if (data.status === 'success' && data.audio_url) {
+        console.log('✅ Base64 audio data alındı, blob oluşturuluyor...');
 
-        // Audio element'ini oluştur ve oynat
-        if (audioRef.current) {
-          audioRef.current.src = url;
-          audioRef.current.play();
-          setIsPlaying(true);
+        try {
+          // Base64 audio data'yı blob'a çevir
+          const audioBlob = new Blob(
+            [Uint8Array.from(atob(data.audio_url), (c) => c.charCodeAt(0))],
+            { type: 'audio/mp3' },
+          );
+
+          // Blob'dan URL oluştur
+          const url = URL.createObjectURL(audioBlob);
+          setAudioUrl(url);
+
+          console.log('✅ Blob URL oluşturuldu:', url);
+
+          // Audio element'ini güncelle ve oynat
+          if (audioRef.current) {
+            audioRef.current.src = url;
+            audioRef.current.load();
+            audioRef.current.play();
+            setIsPlaying(true);
+            console.log('🎵 Ses oynatılıyor...');
+          }
+        } catch (blobError) {
+          console.error('❌ Blob oluşturma hatası:', blobError);
+          throw new Error('Audio blob oluşturulamadı');
         }
       } else {
-        console.error('Sesli anlatım oluşturulamadı:', data.error);
+        console.error('❌ Sesli anlatım oluşturulamadı:', data.error || 'Bilinmeyen hata');
       }
     } catch (error) {
-      console.error('Sesli anlatım hatası:', error);
+      console.error('❌ Sesli anlatım hatası:', error);
+      console.error('❌ Error details:', {
+        errorType: typeof error,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : 'No stack trace',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +149,7 @@ export default function AudioPlayer({ artName, story, className = '' }: AudioPla
   }, [audioUrl]);
 
   return (
-    <div className={`flex items-center gap-4 -ml-5 ${className}`} >
+    <div className={`flex items-center gap-4 -ml-5 ${className}`}>
       {/* Ses Türü Seçici */}
       <div className="relative">
         <button

@@ -1,14 +1,19 @@
 import { useState, useCallback } from 'react';
 
 export const useAudioGenerator = (text: string) => {
+  console.log('🔍 useAudioGenerator hook called with text:', text);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const generateAudio = useCallback(
     async (voice: string = 'tr') => {
-      if (!text.trim()) {
-        setError('Ses üretimi için metin gerekli');
+      console.log('🎯 generateAudio called with:', { text, voice, textLength: text?.length });
+
+      if (!text || !text.trim()) {
+        const errorMsg = 'Ses üretimi için metin gerekli';
+        console.error('❌ Text validation failed:', errorMsg);
+        setError(errorMsg);
         return;
       }
 
@@ -16,35 +21,55 @@ export const useAudioGenerator = (text: string) => {
       setError(null);
 
       try {
-        const response = await fetch('/api/generate-audio', {
+        console.log('🎵 Ses üretimi başlatılıyor...', { text: text.trim(), voice });
+
+        const response = await fetch('http://127.0.0.1:8000/audio/story', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            text: text.trim(),
-            voice,
-            language: voice.startsWith('tr') ? 'tr' : 'en',
+            art_name: 'Sanat Eseri',
+            story: text.trim(),
+            voice: voice,
           }),
         });
 
+        console.log('📡 API Response status:', response.status);
+
         if (!response.ok) {
-          throw new Error('Ses üretimi başarısız');
+          const errorData = await response.text();
+          console.error('❌ API Error:', errorData);
+          throw new Error(`API hatası: ${response.status} - ${errorData}`);
         }
 
         const data = await response.json();
+        console.log('📊 API Response data:', data);
 
-        if (data.audio) {
-          setAudioUrl(data.audio);
+        // API'den gelen hata kontrolü
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        if (data.audio_url) {
+          console.log('✅ Ses URL alındı:', data.audio_url);
+          setAudioUrl(data.audio_url);
+
+          // Fallback mesajı varsa göster
+          if (data.status) {
+            console.log('ℹ️ API Status:', data.status);
+          }
         } else {
           throw new Error('Ses verisi alınamadı');
         }
       } catch (err) {
-        console.error('Ses üretimi hatası:', err);
-        setError(err instanceof Error ? err.message : 'Bilinmeyen hata');
+        console.error('❌ Ses üretimi hatası:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Bilinmeyen hata';
+        setError(errorMessage);
 
         // Hata durumunda fallback ses dosyası kullan
-        setAudioUrl('/sample-audio.mp3');
+        console.log('🔄 Fallback ses dosyası kullanılıyor...');
+        setAudioUrl('/artworks/Adem.jpg'); // Geçici olarak resim dosyası
       } finally {
         setIsGenerating(false);
       }

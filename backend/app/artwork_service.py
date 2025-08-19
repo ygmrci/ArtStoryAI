@@ -170,6 +170,109 @@ class ArtworkService:
             "source": "ai"
         }
 
+    @staticmethod
+    def get_all_artworks() -> List[Dict]:
+        """Get all available artworks for recommendation system"""
+        try:
+            # Manuel eserlerden başla - eser verilerini al, sadece isimleri değil
+            manual_artworks = []
+            try:
+                from app.manual_artworks import manual_artwork_manager
+                # Tüm manuel eserleri al
+                for art_name in manual_artwork_manager.get_all_manual_artworks():
+                    artwork_data = manual_artwork_manager.get_manual_artwork(art_name)
+                    if artwork_data:
+                        manual_artworks.append({
+                            'art_name': art_name,
+                            'artist': artwork_data.get('artist', 'Unknown'),
+                            'year': artwork_data.get('year', 0),
+                            'movement': artwork_data.get('movement', 'Unknown'),
+                            'story': artwork_data.get('story', ''),
+                            'image_url': artwork_data.get('image_url', ''),
+                            'style': artwork_data.get('style', ''),
+                            'technique': artwork_data.get('style', ''),
+                            'dimensions': '',
+                            'location': artwork_data.get('museum', ''),
+                            'value': '',
+                            'significance': artwork_data.get('description', '')
+                        })
+            except Exception as e:
+                print(f"Manuel eser veri alma hatası: {e}")
+            
+            print(f"Manuel eserler bulundu: {len(manual_artworks)}")
+            
+            # Recommendation system'den eserleri al
+            recommendation_artworks = []
+            try:
+                from app.recommendation_system import recommendation_system
+                if hasattr(recommendation_system, 'artwork_features'):
+                    for art_name, features in recommendation_system.artwork_features.items():
+                        recommendation_artworks.append({
+                            'art_name': art_name,
+                            'artist': features.get('artist', 'Unknown'),
+                            'year': features.get('year', 0),
+                            'movement': features.get('movement', 'Unknown'),
+                            'story': features.get('description', ''),
+                            'image_url': features.get('image_url', ''),
+                            'style': features.get('style', ''),
+                            'technique': features.get('technique', ''),
+                            'dimensions': features.get('dimensions', ''),
+                            'location': features.get('location', ''),
+                            'value': features.get('value', ''),
+                            'significance': features.get('significance', '')
+                        })
+            except Exception as e:
+                print(f"Recommendation system veri alma hatası: {e}")
+            
+            print(f"Recommendation system eserleri: {len(recommendation_artworks)}")
+            
+            # Tüm eserleri birleştir
+            all_artworks = manual_artworks + recommendation_artworks
+            
+            # Boş eserleri filtrele
+            all_artworks = [art for art in all_artworks if art.get('art_name')]
+            
+            print(f"Toplam {len(all_artworks)} eser bulundu")
+            
+            # Debug: İlk birkaç eseri göster
+            if all_artworks:
+                print("İlk eserler:")
+                for i, artwork in enumerate(all_artworks[:3]):
+                    print(f"  {i+1}. {artwork.get('art_name')} - {artwork.get('artist')}")
+            
+            return all_artworks
+            
+        except Exception as e:
+            print(f"get_all_artworks hatası: {e}")
+            import traceback
+            traceback.print_exc()
+            # Fallback: Manuel eserlerden sadece temel bilgileri döndür
+            try:
+                from app.manual_artworks import manual_artwork_manager
+                fallback_artworks = []
+                for art_name in manual_artwork_manager.get_all_manual_artworks():
+                    artwork_data = manual_artwork_manager.get_manual_artwork(art_name)
+                    if artwork_data:
+                        fallback_artworks.append({
+                            'art_name': art_name,
+                            'artist': artwork_data.get('artist', 'Unknown'),
+                            'year': artwork_data.get('year', 0),
+                            'movement': artwork_data.get('movement', 'Unknown'),
+                            'story': artwork_data.get('story', ''),
+                            'image_url': artwork_data.get('image_url', ''),
+                            'style': '',
+                            'technique': '',
+                            'dimensions': '',
+                            'location': '',
+                            'value': '',
+                            'significance': ''
+                        })
+                print(f"Fallback: {len(fallback_artworks)} eser bulundu")
+                return fallback_artworks
+            except Exception as fallback_error:
+                print(f"Fallback hatası: {fallback_error}")
+                return []
+
 def generate_artwork_details_with_openai(art_name: str) -> Dict:
     """Generate artwork details using OpenAI"""
     try:

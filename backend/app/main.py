@@ -23,10 +23,18 @@ app = FastAPI(
 # CORS ayarı: Frontend'den gelen istekleri kabul et
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Frontend URL'leri
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        "http://localhost:3000/",
+        "http://127.0.0.1:3000/"
+    ],  # Frontend URL'leri
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # Include recommendation routes
@@ -70,7 +78,7 @@ def create_story_audio(request: StoryAudioRequest):
     Sanat eseri hikayesi için sesli anlatım oluşturur
     """
     try:
-        audio_url = generate_story_audio(request.art_name, request.story, request.voice)
+        audio_url = generate_story_audio(request.art_name, request.story)
         return {
             "art_name": request.art_name,
             "audio_url": audio_url,

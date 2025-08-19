@@ -38,10 +38,9 @@
 
 ### 2.4. Keşif & Ek Özellikler
 
-- [ ] Benzer tabloları listeleyen bileşen oluştur
-- [ ] Yeni arama başlatma butonu ekle
-- [ ] Görsel yükleme (image upload) bileşeni ekle (gelişmiş)
-- [ ] Sesli anlatım (TTS) butonu ve oynatıcı ekle (gelişmiş)
+- [x] Benzer tabloları listeleyen bileşen oluştur
+- [x] Yeni arama başlatma butonu ekle
+- [x] Sesli anlatım (TTS) butonu ve oynatıcı ekle (gelişmiş)
 
 ### 2.5. UI/UX
 
@@ -78,33 +77,27 @@
 - [x] Sanat akımı açıklaması üretimi endpoint'i yaz
 - [x] Uzman modu için teknik açıklama desteği ekle
 
-### 3.4. Görsel Tanıma (Vision AI)
-
-- [ ] Kullanıcıdan gelen görseli işleyen endpoint yaz
-- [ ] Vision AI API'si ile tablo tanıma fonksiyonunu entegre et
-- [ ] Tanınan tabloya göre bilgi çekme akışını kur
-
-### 3.5. Benzer Eserler & Öneri Sistemi
+### 3.4. Benzer Eserler & Öneri Sistemi
 
 - [ ] Embedding ve benzerlik hesaplama fonksiyonlarını ekle
 - [ ] Benzer eserleri döndüren endpoint yaz
 - [ ] Sanatçının diğer önemli işlerini döndüren endpoint yaz
 - [ ] Kullanıcı beğenilerine göre öneri altyapısı hazırla (gelişmiş)
 
-### 3.6. Performans & Cache
+### 3.5. Performans & Cache
 
 - [ ] Redis entegrasyonunu kur
 - [ ] API isteklerini ve AI çıktısını cache'le
 - [ ] Sık kullanılan veri için cache stratejisi uygula
 
-### 3.7. Veritabanı
+### 3.6. Veritabanı
 
 - [x] PostgreSQL bağlantısını kur
 - [x] Sanat eserleri ve kullanıcı verileri için temel tabloları oluştur
 - [x] ORM (SQLAlchemy) ile modelleri yaz
 - [x] Migration altyapısı kur
 
-### 3.8. Hata Yönetimi & Loglama
+### 3.7. Hata Yönetimi & Loglama
 
 - [x] API için merkezi hata yönetimi middleware'i ekle
 - [x] Kullanıcıya dost hata mesajları döndür
@@ -133,7 +126,7 @@
 
 ## 6. Gelişmiş & Gelecek Özellikler
 
-- [ ] Kullanıcı favorileri/koleksiyon oluşturma modülü ekle
+- [x] Kullanıcı favorileri/koleksiyon oluşturma modülü ekle
 - [ ] Eğitim modülü (okullar için) geliştir
 - [ ] Müze işbirliği için QR kod ile AI açıklama desteği ekle
 

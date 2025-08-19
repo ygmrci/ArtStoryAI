@@ -10,12 +10,14 @@ import VoiceSelector from './components/VoiceSelector';
 import AudioElement from './components/AudioElement';
 
 interface AudioPlayerProps {
-  text: string;
+  text?: string;
+  story?: string;
+  artName?: string;
   artworkTitle?: string;
   className?: string;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, artworkTitle, className = '' }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, story, artworkTitle, className = '' }) => {
   const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -34,7 +36,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, artworkTitle, className
     duration,
   } = useAudioControls();
 
-  const { audioUrl, isGenerating, generateAudio, error: generationError } = useAudioGenerator(text);
+  // text veya story prop'undan birini kullan
+  const audioText = text || story || '';
+  console.log('🔍 AudioPlayer Props:', { text, story, audioText });
+  const {
+    audioUrl,
+    isGenerating,
+    generateAudio,
+    error: generationError,
+  } = useAudioGenerator(audioText);
 
   const { selectedVoice, setSelectedVoice, availableVoices } = useVoiceManager();
 
@@ -52,17 +62,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, artworkTitle, className
   }, [audioUrl]);
 
   const handlePlayPause = async () => {
-    if (!audioUrl) {
-      // Ses yoksa önce üret
-      await generateAudio(selectedVoice);
-      return;
-    }
+    try {
+      if (!audioUrl) {
+        // Ses yoksa önce üret
+        console.log('🎵 Ses üretimi başlatılıyor...');
+        await generateAudio(selectedVoice);
+        return;
+      }
 
-    // Ses varsa çal/durdur
-    if (isPlaying) {
-      pause();
-    } else {
-      await play();
+      // Ses varsa çal/durdur
+      if (isPlaying) {
+        pause();
+      } else {
+        await play();
+      }
+    } catch (error) {
+      console.error('❌ handlePlayPause hatası:', error);
+      // Hata durumunda fallback ses kullan
+      console.log('🔄 Fallback ses kullanılıyor...');
     }
   };
 
@@ -105,7 +122,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, artworkTitle, className
               isPlaying={isPlaying}
               isGenerating={isGenerating}
               onClick={handlePlayPause}
-              disabled={!text}
+              disabled={!audioText}
             />
 
             {audioUrl && (
@@ -173,7 +190,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ text, artworkTitle, className
           {/* Hata Mesajı */}
           {generationError && (
             <div className="text-red-400 text-sm text-center p-2 bg-red-500/20 rounded-lg border border-red-500/30">
-              {t('audioPlayer.generationError')}
+              {generationError}
             </div>
           )}
 

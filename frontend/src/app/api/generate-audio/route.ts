@@ -8,13 +8,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Metin gerekli' }, { status: 400 });
     }
 
+    // Hugging Face API Key kontrol et
+    const apiKey = process.env.HUGGINGFACE_API_KEY;
+    if (!apiKey || apiKey === 'hf_demo') {
+      console.warn('Hugging Face API Key bulunamadı, fallback ses kullanılıyor');
+
+      // Fallback: Dummy ses data (base64 encoded silence)
+      const dummyAudioData =
+        'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+
+      return NextResponse.json({
+        audio: dummyAudioData,
+        text: text,
+        voice: voice || 'tr',
+        language: language || 'tr',
+        fallback: true,
+        message: 'Demo mod: Gerçek ses üretimi için HUGGINGFACE_API_KEY gerekli',
+      });
+    }
+
     // Hugging Face'in ücretsiz TTS modeli (Türkçe destekli)
     const response = await fetch(
       'https://api-inference.huggingface.co/models/facebook/mms-tts-tur',
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY || 'hf_demo'}`,
+          Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -30,7 +49,19 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Hugging Face TTS API Error:', errorText);
-      throw new Error(`Ses üretimi başarısız: ${response.status}`);
+
+      // API hatası durumunda fallback ses döndür
+      const dummyAudioData =
+        'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+
+      return NextResponse.json({
+        audio: dummyAudioData,
+        text: text,
+        voice: voice || 'tr',
+        language: language || 'tr',
+        fallback: true,
+        message: 'API hatası: Fallback ses kullanılıyor',
+      });
     }
 
     // Hugging Face'den gelen binary ses verisini base64'e çevir
@@ -43,9 +74,23 @@ export async function POST(request: NextRequest) {
       text: text,
       voice: voice || 'tr',
       language: language || 'tr',
+      fallback: false,
     });
   } catch (error) {
     console.error('Ses üretimi hatası:', error);
-    return NextResponse.json({ error: 'Ses üretimi sırasında hata oluştu' }, { status: 500 });
+
+    // Hata durumunda fallback ses döndür
+    const dummyAudioData =
+      'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+
+    // Catch bloğunda değişkenler tanımlı olmayabilir, güvenli değerler kullan
+    return NextResponse.json({
+      audio: dummyAudioData,
+      text: 'Hata durumunda metin bulunamadı',
+      voice: 'tr',
+      language: 'tr',
+      fallback: true,
+      message: 'Sistem hatası: Fallback ses kullanılıyor',
+    });
   }
 }

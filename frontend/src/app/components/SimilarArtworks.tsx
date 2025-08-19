@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useRecommendations } from '../hooks/useRecommendations';
 
 interface SimilarArtwork {
   title: string;
@@ -13,18 +14,16 @@ interface SimilarArtwork {
 }
 
 interface SimilarArtworksProps {
-  artworks: SimilarArtwork[];
   currentArtwork: string;
   currentArtist?: string; // Mevcut sanatçı bilgisi için
 }
 
-export default function SimilarArtworks({
-  artworks,
-  currentArtwork,
-  currentArtist,
-}: SimilarArtworksProps) {
+export default function SimilarArtworks({ currentArtwork, currentArtist }: SimilarArtworksProps) {
   const router = useRouter();
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
+
+  // API'den benzer eserleri al
+  const { recommendations, loading, error } = useRecommendations(currentArtwork);
 
   const handleArtworkClick = (artworkTitle: string) => {
     router.push(`/artwork/${encodeURIComponent(artworkTitle)}`);
@@ -44,8 +43,39 @@ export default function SimilarArtworks({
     toggleFavorite(favoriteArtwork);
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="mt-8 sm:mt-12 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 backdrop-blur-md">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+            <svg
+              className="w-4 h-4 text-white animate-spin"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </div>
+          <span className="text-lg font-semibold text-white">Benzer eserler yükleniyor...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    console.warn('Recommendation error:', error);
+  }
+
   // Her zaman 3 eser göster
-  const displayArtworks = artworks && artworks.length > 0 ? artworks : [];
+  const displayArtworks = recommendations && recommendations.length > 0 ? recommendations : [];
 
   // Eğer 3'ten az eser varsa, placeholder eserler ekle
   const placeholderArtworks = [
@@ -69,7 +99,7 @@ export default function SimilarArtworks({
     }
   }
 
-  if (!artworks || artworks.length === 0) {
+  if (!recommendations || recommendations.length === 0) {
     return null;
   }
 
