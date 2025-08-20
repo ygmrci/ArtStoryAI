@@ -25,6 +25,13 @@ export default function SimilarArtworks({ currentArtwork, currentArtist }: Simil
   // API'den benzer eserleri al
   const { recommendations, loading, error } = useRecommendations(currentArtwork);
 
+  // Debug log'ları
+  console.log('🔍 SimilarArtworks Component Debug:');
+  console.log('  - currentArtwork:', currentArtwork);
+  console.log('  - recommendations:', recommendations);
+  console.log('  - loading:', loading);
+  console.log('  - error:', error);
+
   const handleArtworkClick = (artworkTitle: string) => {
     router.push(`/artwork/${encodeURIComponent(artworkTitle)}`);
   };
@@ -80,12 +87,28 @@ export default function SimilarArtworks({ currentArtwork, currentArtist }: Simil
   // Eğer 3'ten az eser varsa, placeholder eserler ekle
   const placeholderArtworks = [
     {
-      title: 'Sanat Eseri',
-      artist: 'Bilinmeyen Sanatçı',
-      year: 'N/A',
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      year: '1503-1519',
       image_url:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png',
-      similarity_reason: 'Genel sanat eseri',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/300px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+      similarity_reason: 'Klasik sanat eseri',
+    },
+    {
+      title: 'The Starry Night',
+      artist: 'Vincent van Gogh',
+      year: '1889',
+      image_url:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/300px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+      similarity_reason: 'Post-empresyonist eser',
+    },
+    {
+      title: 'The Scream',
+      artist: 'Edvard Munch',
+      year: '1893',
+      image_url:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/300px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg',
+      similarity_reason: 'Modern sanat eseri',
     },
   ];
 

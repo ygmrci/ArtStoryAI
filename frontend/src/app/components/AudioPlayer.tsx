@@ -30,7 +30,7 @@ export default function AudioPlayer({ artName, text, className = '' }: AudioPlay
 
   const fetchVoices = async () => {
     try {
-      const response = await fetch('http://localhost:8000/audio/voices');
+      const response = await fetch('http://127.0.0.1:8000/audio/voices');
       const data = await response.json();
       setVoices(data.voices || []);
     } catch (error) {
@@ -50,7 +50,7 @@ export default function AudioPlayer({ artName, text, className = '' }: AudioPlay
     try {
       console.log('🎵 API çağrısı başlatılıyor:', { artName, text, voice: selectedVoice });
 
-      const response = await fetch('http://localhost:8000/audio/story', {
+      const response = await fetch('http://127.0.0.1:8000/audio/story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

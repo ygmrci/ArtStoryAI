@@ -61,7 +61,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
   }, [artName]);
 
   const handleLike = () => {
-    if (!artwork) return;
+    if (!artwork || !artwork.art_name) return;
 
     // Backend data'sını console'da göster
     console.log('Backend artwork data:', artwork);
@@ -91,7 +91,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
       // Genel fallback
       imageUrl =
         artwork.image_url ||
-        `/artworks/${artwork.art_name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.jpg`;
+        `/artworks/${artwork.art_name?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'default'}.jpg`;
     }
 
     const favoriteArtwork = {
@@ -107,10 +107,12 @@ export default function ArtworkClient({ artName }: { artName: string }) {
   };
 
   const handleShare = () => {
+    if (!artwork?.art_name) return;
+
     if (navigator.share) {
       navigator.share({
-        title: artwork?.art_name,
-        text: `${artwork?.art_name} - ${artwork?.artist}`,
+        title: artwork.art_name,
+        text: `${artwork.art_name} - ${artwork.artist || 'Unknown Artist'}`,
         url: window.location.href,
       });
     } else {
@@ -270,7 +272,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
             <div className="relative overflow-hidden rounded-lg max-w-[300px] mx-auto">
               <img
                 src={(() => {
-                  const title = artwork.art_name.toLowerCase();
+                  const title = artwork.art_name?.toLowerCase() || '';
 
                   // Manuel eklenen resimler için direkt kullan
                   if (

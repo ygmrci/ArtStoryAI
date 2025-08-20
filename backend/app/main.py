@@ -11,6 +11,7 @@ from app.artwork_service import artwork_service
 from app.features.text_to_speech import generate_story_audio, generate_speech_from_text, get_available_voices
 from app.recommendation_routes import router as recommendation_router
 from app.cache_service import artwork_cache
+from app.redis_cache_service import redis_cache
 from app.manual_image_routes import router as manual_image_router
 from app.met_museum_service import met_museum_service
 from app.filter_routes import router as filter_router
@@ -178,13 +179,26 @@ def get_voices():
 
 # Cache Yönetim Endpoint'leri
 @app.get("/cache/stats")
-def get_cache_stats():
+async def get_cache_stats():
     """
-    Cache istatistiklerini döndürür
+    Cache istatistiklerini döndürür (Redis + In-Memory)
     """
     try:
+        # Get in-memory cache stats
+        in_memory_stats = artwork_cache.get_stats()
+        
+        # Get Redis cache stats
+        redis_stats = {}
+        try:
+            if redis_cache.is_connected:
+                redis_stats = await redis_cache.get_stats()
+        except Exception as redis_error:
+            print(f"Redis stats error: {redis_error}")
+            redis_stats = {"error": "Redis not available"}
+        
         return {
-            "cache_stats": artwork_cache.get_stats(),
+            "in_memory_cache": in_memory_stats,
+            "redis_cache": redis_stats,
             "message": "Cache istatistikleri başarıyla alındı"
         }
     except Exception as e:
@@ -228,5 +242,24 @@ def get_cache_keys():
         print(f"Cache keys hatası: {e}")
         return {
             "error": "Cache anahtarları alınırken hata oluştu",
+            "details": str(e)
+        }
+
+@app.get("/cache/redis/health")
+async def get_redis_health():
+    """
+    Redis cache sağlık durumunu kontrol eder
+    """
+    try:
+        health_status = await redis_cache.health_check()
+        return {
+            "redis_connected": health_status,
+            "message": "Redis sağlık kontrolü tamamlandı"
+        }
+    except Exception as e:
+        print(f"Redis health check hatası: {e}")
+        return {
+            "redis_connected": False,
+            "error": "Redis sağlık kontrolü başarısız",
             "details": str(e)
         }

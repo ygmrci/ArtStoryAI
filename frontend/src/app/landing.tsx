@@ -6,6 +6,9 @@ export default function Landing() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // Debug log'ları
+  console.log('🔍 Landing Component Debug:', { query, isLoading });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -18,7 +21,7 @@ export default function Landing() {
 
     try {
       // Backend API'sine istek at
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
       const response = await fetch(`${apiUrl}/artwork/${encodeURIComponent(query.trim())}`);
 
       if (!response.ok) {
@@ -43,11 +46,15 @@ export default function Landing() {
       <img
         src="/VanGogh.png"
         alt="Van Gogh"
-        className="absolute inset-0 w-full h-full object-cover object-center z-0"
-        style={{ filter: 'brightness(0.5) blur(0px)' }}
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        style={{
+          filter: 'brightness(0.5) blur(0px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
       />
       {/* Karanlık overlay */}
-      <div className="absolute inset-0 bg-black/60 z-10" />
+      <div className="absolute inset-0 bg-black/60" style={{ zIndex: 1, pointerEvents: 'none' }} />
 
       {/* Loading Overlay */}
       {isLoading && (
@@ -70,7 +77,9 @@ export default function Landing() {
           minHeight: '60vh',
           paddingLeft: '50px',
           paddingRight: '50px',
-          zIndex: 1,
+          zIndex: 9999,
+          position: 'relative',
+          pointerEvents: 'auto',
         }}
       >
         <h1 className="text-5xl font-serif font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">
@@ -85,6 +94,11 @@ export default function Landing() {
         <form
           onSubmit={handleSubmit}
           className="flex flex-row w-full max-w-lg gap-2 bg-white/10 rounded-full p-2 shadow-lg backdrop-blur-md"
+          style={{
+            zIndex: 9999,
+            position: 'relative',
+            pointerEvents: 'auto',
+          }}
         >
           <input
             type="text"
@@ -92,7 +106,13 @@ export default function Landing() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Bir tablo adı yazın  örn: Mona Lisa"
             className="w-[400px] px-20 py-10 rounded-full bg-white text-black font-semibold text-xl transition-all duration-300 hover:bg-white focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-400 placeholder:text-gray-500 shadow-2xl border-2 border-white/20 backdrop-blur-sm"
-            disabled={isLoading}
+            disabled={false}
+            style={{
+              zIndex: 9999,
+              position: 'relative',
+              pointerEvents: 'auto',
+              cursor: 'text',
+            }}
           />
           <button
             type="submit"

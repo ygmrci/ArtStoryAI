@@ -168,7 +168,10 @@ class RecommendationEngine:
                     target_artwork, artwork
                 )
                 
-                if similarity_score > 0.1:  # Minimum similarity threshold
+                # Debug log
+                print(f"🔍 Similarity: {artwork.get('art_name')} -> {similarity_score}")
+                
+                if similarity_score > 0.01:  # Minimum similarity threshold (düşürüldü)
                     recommendations.append({
                         'artwork': artwork,
                         'similarity_score': similarity_score,
@@ -279,6 +282,9 @@ class RecommendationEngine:
                 movement_sim * self.weights['movement'] +
                 theme_sim * self.weights['theme']
             )
+            
+            # Debug log
+            print(f"🔍 Similarity breakdown: artist={artist_sim}, period={period_sim}, movement={movement_sim}, theme={theme_sim} -> overall={overall_score}")
             
             return round(overall_score, 3)
             

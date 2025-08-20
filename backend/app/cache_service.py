@@ -1,6 +1,6 @@
 """
 Cache Service for ArtStoryAI
-Provides in-memory caching for artwork information and images
+Provides hybrid caching (in-memory + Redis) for artwork information and images
 """
 
 import time
@@ -8,21 +8,46 @@ from typing import Dict, Any, Optional
 from functools import lru_cache
 import hashlib
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ArtworkCache:
-    """In-memory cache for artwork data"""
+    """Hybrid cache for artwork data (in-memory + Redis)"""
     
     def __init__(self):
         self.cache: Dict[str, Dict[str, Any]] = {}
         self.cache_ttl: Dict[str, float] = {}
         self.default_ttl = 3600  # 1 saat
+        self.redis_enabled = False
+        
+        # Try to import Redis cache
+        try:
+            from .redis_cache_service import redis_cache
+            self.redis_cache = redis_cache
+            self.redis_enabled = True
+            logger.info("Redis cache enabled")
+        except ImportError:
+            logger.warning("Redis cache not available, using in-memory only")
+            self.redis_cache = None
     
     def _generate_key(self, data: str) -> str:
         """Generate cache key from data"""
         return hashlib.md5(data.encode()).hexdigest()
     
-    def get(self, key: str) -> Optional[Any]:
-        """Get value from cache if not expired"""
+    async def get(self, key: str) -> Optional[Any]:
+        """Get value from cache if not expired (Redis first, then in-memory)"""
+        # Try Redis first if available
+        if self.redis_enabled and self.redis_cache:
+            try:
+                redis_result = await self.redis_cache.get(key)
+                if redis_result is not None:
+                    logger.info(f"Redis cache hit for key: {key}")
+                    return redis_result
+            except Exception as e:
+                logger.warning(f"Redis get error, falling back to in-memory: {e}")
+        
+        # Fallback to in-memory cache
         if key not in self.cache:
             return None
         
@@ -31,12 +56,23 @@ class ArtworkCache:
             self.delete(key)
             return None
         
+        logger.info(f"In-memory cache hit for key: {key}")
         return self.cache[key]
     
-    def set(self, key: str, value: Any, ttl: int = None) -> None:
-        """Set value in cache with TTL"""
+    async def set(self, key: str, value: Any, ttl: int = None) -> None:
+        """Set value in cache with TTL (Redis first, then in-memory)"""
+        # Try Redis first if available
+        if self.redis_enabled and self.redis_cache:
+            try:
+                await self.redis_cache.set(key, value, ttl or self.default_ttl)
+                logger.info(f"Value cached in Redis for key: {key}")
+            except Exception as e:
+                logger.warning(f"Redis set error, falling back to in-memory: {e}")
+        
+        # Always set in in-memory cache as backup
         self.cache[key] = value
         self.cache_ttl[key] = time.time() + (ttl or self.default_ttl)
+        logger.info(f"Value cached in memory for key: {key}")
     
     def delete(self, key: str) -> None:
         """Delete key from cache"""
@@ -57,6 +93,24 @@ class ArtworkCache:
             "memory_usage": len(str(self.cache)),
             "expired_keys": len([k for k, v in self.cache_ttl.items() if time.time() > v])
         }
+    
+    # Sync methods for backward compatibility
+    def get_sync(self, key: str) -> Optional[Any]:
+        """Synchronous version of get for backward compatibility"""
+        if key not in self.cache:
+            return None
+        
+        # Check if expired
+        if time.time() > self.cache_ttl.get(key, 0):
+            self.delete(key)
+            return None
+        
+        return self.cache[key]
+    
+    def set_sync(self, key: str, value: Any, ttl: int = None) -> None:
+        """Synchronous version of set for backward compatibility"""
+        self.cache[key] = value
+        self.cache_ttl[key] = time.time() + (ttl or self.default_ttl)
 
 # Global cache instance
 artwork_cache = ArtworkCache()
@@ -69,15 +123,15 @@ def cache_result(ttl: int = 3600):
             # Generate cache key from function name and arguments
             cache_key = f"{func.__name__}:{hash(str(args) + str(kwargs))}"
             
-            # Try to get from cache
-            cached_result = artwork_cache.get(cache_key)
+            # Try to get from cache (sync version for backward compatibility)
+            cached_result = artwork_cache.get_sync(cache_key)
             if cached_result is not None:
                 print(f"Cache hit for {func.__name__}")
                 return cached_result
             
             # Execute function and cache result
             result = func(*args, **kwargs)
-            artwork_cache.set(cache_key, result, ttl)
+            artwork_cache.set_sync(cache_key, result, ttl)
             print(f"Cache miss for {func.__name__}, cached for {ttl}s")
             
             return result

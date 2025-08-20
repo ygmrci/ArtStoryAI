@@ -14,7 +14,7 @@ import logging
 import traceback
 
 from .services.recommendation_service import recommendation_engine
-from .artwork_service import artwork_service
+from .artwork_service import ArtworkService
 
 logger = logging.getLogger(__name__)
 
@@ -38,9 +38,12 @@ async def get_similar_artworks(
     """
     try:
         logger.info(f"Getting similar artworks for: {artwork_name}")
+        print(f"🔍 Backend: Getting similar artworks for: {artwork_name}")
         
         # Get target artwork info
-        target_artwork = artwork_service.get_artwork_info(artwork_name)
+        target_artwork = ArtworkService.get_artwork_info(artwork_name)
+        print(f"🔍 Backend: Target artwork result: {target_artwork}")
+        
         if not target_artwork or 'error' in target_artwork:
             raise HTTPException(
                 status_code=404, 
@@ -48,9 +51,10 @@ async def get_similar_artworks(
             )
         
         logger.info(f"Target artwork found: {target_artwork.get('art_name', 'Unknown')}")
+        print(f"🔍 Backend: Target artwork found: {target_artwork.get('art_name', 'Unknown')}")
         
         # Get all available artworks for comparison (with timeout protection)
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         if not all_artworks:
             logger.warning("No artworks available for comparison")
             raise HTTPException(
@@ -126,7 +130,7 @@ async def get_artist_recommendations(
         logger.info(f"Getting artist recommendations for: {artist_name}")
         
         # Get all artworks by the artist
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         if not all_artworks:
             logger.warning("No artworks available for recommendations")
             raise HTTPException(
@@ -196,7 +200,7 @@ async def get_period_recommendations(
         logger.info(f"Getting period recommendations for year: {year}")
         
         # Get all available artworks
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         if not all_artworks:
             logger.warning("No artworks available for period recommendations")
             raise HTTPException(
@@ -264,7 +268,7 @@ async def get_movement_recommendations(
     """
     try:
         # Get all artworks
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         if not all_artworks:
             raise HTTPException(
                 status_code=500, 
@@ -322,7 +326,7 @@ async def get_movement_recommendations(
 async def debug_all_artworks() -> Dict:
     """Debug endpoint to see all available artworks"""
     try:
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         return {
             "success": True,
             "total_artworks": len(all_artworks),
@@ -355,7 +359,7 @@ async def get_exploration_recommendations(
     """
     try:
         # Get all artworks
-        all_artworks = artwork_service.get_all_artworks()
+        all_artworks = ArtworkService.get_all_artworks()
         if not all_artworks:
             raise HTTPException(
                 status_code=500, 

@@ -105,7 +105,7 @@ const Header = () => {
             </div>
             <div className="flex flex-col">
               <span
-                className="text-xl font-bold tracking-wide"
+                className="text-xl font-bold text-purple-500 tracking-wide"
                 style={{
                   background: 'linear-gradient(135deg,rgb(255, 255, 255),rgb(255, 255, 255))',
                   WebkitBackgroundClip: 'text',

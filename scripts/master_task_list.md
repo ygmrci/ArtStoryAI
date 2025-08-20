@@ -86,9 +86,9 @@
 
 ### 3.5. Performans & Cache
 
-- [ ] Redis entegrasyonunu kur
-- [ ] API isteklerini ve AI çıktısını cache'le
-- [ ] Sık kullanılan veri için cache stratejisi uygula
+- [x] Redis entegrasyonunu kur
+- [x] API isteklerini ve AI çıktısını cache'le
+- [x] Sık kullanılan veri için cache stratejisi uygula
 
 ### 3.6. Veritabanı
 

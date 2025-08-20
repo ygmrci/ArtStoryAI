@@ -19,7 +19,7 @@ from app.features.openai_story import (
     generate_artist_bio_with_openai, 
     generate_movement_desc_with_openai
 )
-from app.cache_service import cache_result, get_cached_artwork_image, get_cached_artwork_content
+# Cache temporarily disabled for stability
 from app.manual_artworks import manual_artwork_manager
 from app.manual_image_manager import manual_image_manager
 
@@ -27,7 +27,6 @@ class ArtworkService:
     """Service class for handling artwork operations"""
     
     @staticmethod
-    @cache_result(ttl=7200)  # Cache for 2 hours
     def get_artwork_image(art_name: str) -> str:
         """Get artwork image URL from various sources"""
         decoded_name = urllib.parse.unquote(art_name)
@@ -90,7 +89,6 @@ class ArtworkService:
         return image_url
     
     @staticmethod
-    @cache_result(ttl=3600)  # Cache for 1 hour (AI content is expensive)
     def generate_artwork_content(art_name: str) -> Dict[str, str]:
         """Generate AI content for artwork"""
         decoded_name = urllib.parse.unquote(art_name)
@@ -109,7 +107,6 @@ class ArtworkService:
         }
     
     @staticmethod
-    @cache_result(ttl=1800)  # Cache for 30 minutes
     def get_artwork_info(art_name: str) -> Dict:
         """Get complete artwork information with fuzzy matching"""
         decoded_name = urllib.parse.unquote(art_name)
@@ -147,11 +144,11 @@ class ArtworkService:
         # Manuel eser bulunamazsa AI ile üret
         print(f"❌ Manuel eser bulunamadı, AI ile üretiliyor: {decoded_name}")
         
-        # Get image (cached)
-        image_url = get_cached_artwork_image(decoded_name)
+        # Get image (direct call)
+        image_url = ArtworkService.get_artwork_image(decoded_name)
         
-        # Generate content (cached)
-        content = get_cached_artwork_content(decoded_name)
+        # Generate content (direct call)
+        content = ArtworkService.generate_artwork_content(decoded_name)
         
         # Get similar artworks
         similar_artworks = get_similar_artworks(decoded_name, content["artwork_details"])
