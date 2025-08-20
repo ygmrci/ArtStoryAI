@@ -63,14 +63,46 @@ export default function ArtworkClient({ artName }: { artName: string }) {
   const handleLike = () => {
     if (!artwork) return;
 
+    // Backend data'sını console'da göster
+    console.log('Backend artwork data:', artwork);
+
+    // Avignonlu Kızlar için özel görsel path'i
+    let imageUrl;
+    if (
+      artwork.art_name.toLowerCase().includes('avignonlu kızlar') ||
+      artwork.art_name.toLowerCase().includes('avignon')
+    ) {
+      imageUrl = '/artworks/avignonluKızlar.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('adem')) {
+      imageUrl = '/artworks/Adem.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('venüs')) {
+      imageUrl = '/artworks/VenüsDogusu.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('kaplumbağa')) {
+      imageUrl = '/artworks/kaplumbagaTerbiyecisi.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('nilüfer')) {
+      imageUrl = '/artworks/Nilüferler.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('köylü')) {
+      imageUrl = '/artworks/koyluKadın.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('david')) {
+      imageUrl = '/artworks/David.jpg';
+    } else if (artwork.art_name.toLowerCase().includes('amerikan')) {
+      imageUrl = '/artworks/amerikanGotiği.jpg';
+    } else {
+      // Genel fallback
+      imageUrl =
+        artwork.image_url ||
+        `/artworks/${artwork.art_name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.jpg`;
+    }
+
     const favoriteArtwork = {
       id: artwork.art_name,
       art_name: artwork.art_name,
       artist: artwork.artist,
       year: artwork.year,
-      image_url: artwork.image_url,
+      image_url: imageUrl,
     };
 
+    console.log('Favori ekleniyor:', favoriteArtwork);
     toggleFavorite(favoriteArtwork);
   };
 

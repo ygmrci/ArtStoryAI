@@ -7,6 +7,9 @@ export function getImageUrl(artName: string, imageUrl: string): string {
   const manualImages: Record<string, string> = {
     'kaplumbağa terbiyecisi': '/artworks/kaplumbagaTerbiyecisi.jpg',
     'avignonlu kızlar': '/artworks/avignonluKızlar.jpg',
+    'avignonlu-kızlar': '/artworks/avignonluKızlar.jpg', // URL slug için
+    'avignonlu kizlar': '/artworks/avignonluKızlar.jpg', // Türkçe karakter olmadan
+    avignonlu: '/artworks/avignonluKızlar.jpg', // Kısaltma
     'mona lisa': '/artworks/ladywithandermine.jpg',
     'venüs doğuşu': '/artworks/VenüsDogusu.jpg',
     nilüferler: '/artworks/Nilüferler.jpg',
@@ -25,9 +28,14 @@ export function getImageUrl(artName: string, imageUrl: string): string {
     cans: '/artworks/Cans.jpg',
   };
 
-  // Manuel resim kontrolü
+  // Manuel resim kontrolü - daha esnek eşleştirme
   for (const [key, value] of Object.entries(manualImages)) {
-    if (title.includes(key)) {
+    if (
+      title.includes(key) ||
+      key.includes(title) ||
+      title.replace(/[^a-z0-9]/g, '').includes(key.replace(/[^a-z0-9]/g, ''))
+    ) {
+      console.log(`✅ Görsel eşleşti: "${artName}" -> "${key}" -> "${value}"`);
       return value;
     }
   }
@@ -44,5 +52,6 @@ export function getImageUrl(artName: string, imageUrl: string): string {
   }
 
   // Fallback
+  console.log(`❌ Görsel bulunamadı: "${artName}" -> fallback kullanılıyor`);
   return 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
 }

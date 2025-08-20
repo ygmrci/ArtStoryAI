@@ -12,6 +12,8 @@ from app.features.text_to_speech import generate_story_audio, generate_speech_fr
 from app.recommendation_routes import router as recommendation_router
 from app.cache_service import artwork_cache
 from app.manual_image_routes import router as manual_image_router
+from app.met_museum_service import met_museum_service
+from app.filter_routes import router as filter_router
 
 
 app = FastAPI(
@@ -43,6 +45,12 @@ app.include_router(recommendation_router)
 # Include manual image routes
 app.include_router(manual_image_router)
 
+# Include filter routes
+app.include_router(filter_router)
+
+# Static files için manual_images klasörünü serve et
+app.mount("/manual_images", StaticFiles(directory="manual_images"), name="manual_images")
+
 
 
 @app.get("/")
@@ -68,6 +76,46 @@ def get_artwork_info(art_name: str):
         print(f"Artwork info hatası: {e}")
         return {
             "error": "Sanat eseri bilgisi alınırken hata oluştu",
+            "details": str(e)
+        }
+
+@app.get("/api/filter-artworks")
+async def filter_artworks(
+    periods: str = None,
+    styles: str = None,
+    colors: str = None,
+    sizes: str = None,
+    museums: str = None
+):
+    """Filter artworks based on criteria"""
+    try:
+        # URL parametrelerini parse et
+        filters = {}
+        if periods:
+            filters['periods'] = periods.split(',')
+        if styles:
+            filters['styles'] = styles.split(',')
+        if colors:
+            filters['colors'] = colors.split(',')
+        if sizes:
+            filters['sizes'] = sizes.split(',')
+        if museums:
+            filters['museums'] = museums.split(',')
+        
+        # MET Museum API'den filtreli sonuçları al
+        artworks = await met_museum_service.get_filtered_artworks(filters)
+        
+        return {
+            "filters": filters,
+            "artworks": artworks,
+            "total": len(artworks),
+            "source": "MET Museum API",
+            "message": "Gerçek zamanlı filtreleme aktif!"
+        }
+    except Exception as e:
+        print(f"Filter API hatası: {e}")
+        return {
+            "error": "Filtreleme sırasında hata oluştu",
             "details": str(e)
         }
 

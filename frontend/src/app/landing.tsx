@@ -79,6 +79,9 @@ export default function Landing() {
         <h2 className="text-2xl font-medium text-white/90 mb-8 max-w-md drop-shadow">
           Sanat Tarihini Daha Önce Hiç Olmadığı Gibi Keşfedin
         </h2>
+
+        {/* Demo Linkleri */}
+        {/* Filter demo link'i kaldırıldı - keşfet sayfasında iyileştirilecek */}
         <form
           onSubmit={handleSubmit}
           className="flex flex-row w-full max-w-lg gap-2 bg-white/10 rounded-full p-2 shadow-lg backdrop-blur-md"
