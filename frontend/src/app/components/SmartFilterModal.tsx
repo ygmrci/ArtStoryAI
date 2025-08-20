@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { DEFAULT_FILTER_OPTIONS, DEFAULT_SOURCES } from '../../lib/config';
 
 interface FilterState {
   periods: string[];
@@ -30,30 +31,19 @@ const SmartFilterModal = ({
     colors: [],
     sizes: [],
     museums: [],
-    sources: ['Manuel Görseller', 'MET Museum'],
+    sources: [...DEFAULT_SOURCES],
   });
 
   // Debug için console.log
   console.log('SmartFilterModal render - isOpen:', isOpen, 'propFilterOptions:', propFilterOptions);
 
-  // Filtre seçenekleri - Varsayılan değerler
-  const defaultFilterOptions = {
-    periods: ['Rönesans', 'Barok', 'Klasik', 'Modern', 'Çağdaş'],
-    styles: ['Empresyonizm', 'Ekspresyonizm', 'Kübizm', 'Sürrealizm', 'Realizm', 'Romantizm'],
-    colors: ['Sıcak', 'Soğuk', 'Monokrom', 'Renkli', 'Pastel', 'Canlı'],
-    sizes: ['Küçük', 'Orta', 'Büyük'],
-    museums: ['Louvre', 'MET', 'Uffizi', 'Prado', 'British Museum', 'Vatican Museums'],
-    sources: ['Manuel Görseller', 'MET Museum', 'Art Institute', 'Wikimedia'],
-  };
-
   // Props'tan gelen filterOptions varsa onu kullan, yoksa varsayılanları kullan
   const filterOptions =
     propFilterOptions && Object.keys(propFilterOptions).length > 0
       ? propFilterOptions
-      : defaultFilterOptions;
+      : DEFAULT_FILTER_OPTIONS;
 
   useEffect(() => {
-    console.log('useEffect çalıştı - isOpen:', isOpen);
     if (isOpen) {
       console.log('Modal açılıyor...');
     } else {
@@ -83,7 +73,7 @@ const SmartFilterModal = ({
       colors: [],
       sizes: [],
       museums: [],
-      sources: ['Manuel Görseller', 'MET Museum'],
+      sources: [...DEFAULT_SOURCES],
     });
   };
 
@@ -91,19 +81,12 @@ const SmartFilterModal = ({
     return filters[category].length;
   };
 
-  console.log('Modal render check - isOpen:', isOpen, 'return null?', !isOpen);
-
   if (!isOpen) {
-    console.log('Modal render edilmiyor - isOpen false');
     return null;
   }
 
-  console.log('Modal render ediliyor!');
-  console.log('filterOptions:', filterOptions);
-
   // filterOptions kontrolü
   if (!filterOptions || !filterOptions.periods || !filterOptions.styles) {
-    console.log('filterOptions eksik, varsayılan değerler kullanılıyor');
     return null;
   }
 
@@ -115,7 +98,7 @@ const SmartFilterModal = ({
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 9999999,
+        zIndex: 8000, // Header'ın altında ama diğer içeriklerin üstünde
         display: isOpen ? 'block' : 'none',
       }}
     >
@@ -128,7 +111,7 @@ const SmartFilterModal = ({
           right: 0,
           bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          zIndex: 9999999,
+          zIndex: 8000, // Header'ın altında ama diğer içeriklerin üstünde
         }}
         onClick={onClose}
       />
@@ -145,7 +128,7 @@ const SmartFilterModal = ({
           backgroundColor: 'white',
           borderRadius: '8px',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          zIndex: 10000000,
+          zIndex: 8001, // Modal içeriği overlay'in üstünde
           display: 'flex',
           flexDirection: 'column', // Flexbox layout
         }}

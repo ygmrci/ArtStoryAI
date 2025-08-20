@@ -15,10 +15,7 @@ const Header = () => {
   };
 
   const handleDiscoverClick = () => {
-    console.log('Keşfet butonuna tıklandı!');
-    console.log('Önceki modal state:', isFilterModalOpen);
     setIsFilterModalOpen(true);
-    console.log('Yeni modal state:', true);
   };
 
   const handleCloseFilterModal = () => {
@@ -26,8 +23,6 @@ const Header = () => {
   };
 
   const handleApplyFilters = (filters: any) => {
-    console.log('Uygulanan filtreler:', filters);
-
     // Filtreleri URL parametrelerine çevir
     const params = new URLSearchParams();
 
@@ -46,6 +41,9 @@ const Header = () => {
     if (filters.museums && filters.museums.length > 0) {
       params.set('museums', filters.museums.join(','));
     }
+    if (filters.sources && filters.sources.length > 0) {
+      params.set('sources', filters.sources.join(','));
+    }
 
     // Yeni sayfaya yönlendir
     const queryString = params.toString();
@@ -62,7 +60,7 @@ const Header = () => {
         className="fixed top-0 left-0 w-full border-b border-gray-300"
         style={{
           backgroundColor: '#ffffff',
-          zIndex: 50, // Daha da düşük z-index
+          zIndex: 99999, // Kalp ikonundan daha yüksek z-index
           position: 'fixed',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         }}
@@ -72,6 +70,7 @@ const Header = () => {
           <button
             onClick={() => router.back()}
             className="w-32 h-12 bg-gray-500 hover:bg-gray-600 text-black font-medium rounded-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 shadow-md flex items-center justify-center"
+            style={{ position: 'relative', zIndex: 10000 }}
           >
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +89,7 @@ const Header = () => {
           <Link
             href="/"
             className="group flex items-center gap-4 hover:scale-105 transition-all duration-500"
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: 'none', position: 'relative', zIndex: 10000 }}
           >
             <div className="relative">
               <span className="text-4xl" role="img" aria-label="Palet">
@@ -126,7 +125,7 @@ const Header = () => {
           </Link>
 
           {/* Navigation & Actions */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8" style={{ position: 'relative', zIndex: 10000 }}>
             {/* Navigation Links */}
             <nav className="flex items-center gap-8">
               {[
@@ -138,7 +137,7 @@ const Header = () => {
                   key={link.href}
                   href={link.href}
                   className="relative font-medium text-sm transition-all duration-300 hover:scale-105 text-gray-700 hidden md:block"
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: 'none', position: 'relative', zIndex: 10001 }}
                 >
                   <span className="relative z-10">{link.label}</span>
                   <div className="absolute -bottom-1 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full bg-blue-500"></div>
@@ -149,7 +148,7 @@ const Header = () => {
               <button
                 onClick={handleDiscoverClick}
                 className="relative font-medium text-sm transition-all duration-300 hover:scale-105 text-gray-700 group flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 border border-gray-200"
-                style={{ zIndex: 1000 }}
+                style={{ position: 'relative', zIndex: 10001 }}
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,12 +166,15 @@ const Header = () => {
             </nav>
 
             {/* Favorites Button */}
-            <div className="flex items-center gap-2" style={{ position: 'relative', zIndex: 1000 }}>
+            <div
+              className="flex items-center gap-2"
+              style={{ position: 'relative', zIndex: 10001 }}
+            >
               {/* Favoriler Sayfası Butonu */}
               <button
                 onClick={handleFavoritesClick}
                 className="w-32 h-12 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-2xl transition-all duration-500 hover:-translate-y-1 hover:scale-105 shadow-md flex items-center justify-center"
-                style={{ position: 'relative', zIndex: 1000 }}
+                style={{ position: 'relative', zIndex: 10001 }}
               >
                 <div className="flex items-center gap-3">
                   <span className="font-medium">Favorilerim</span>
@@ -181,7 +183,7 @@ const Header = () => {
                   {favorites.length > 0 && (
                     <span
                       className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center"
-                      style={{ position: 'relative', zIndex: 1000 }}
+                      style={{ position: 'relative', zIndex: 10002 }}
                     >
                       {favorites.length}
                     </span>

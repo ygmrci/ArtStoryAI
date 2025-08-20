@@ -79,10 +79,10 @@
 
 ### 3.4. Benzer Eserler & Öneri Sistemi
 
-- [ ] Embedding ve benzerlik hesaplama fonksiyonlarını ekle
-- [ ] Benzer eserleri döndüren endpoint yaz
-- [ ] Sanatçının diğer önemli işlerini döndüren endpoint yaz
-- [ ] Kullanıcı beğenilerine göre öneri altyapısı hazırla (gelişmiş)
+- [x] Embedding ve benzerlik hesaplama fonksiyonlarını ekle
+- [x] Benzer eserleri döndüren endpoint yaz
+- [x] Sanatçının diğer önemli işlerini döndüren endpoint yaz
+- [x] Kullanıcı beğenilerine göre öneri altyapısı hazırla (gelişmiş)
 
 ### 3.5. Performans & Cache
 
@@ -127,8 +127,6 @@
 ## 6. Gelişmiş & Gelecek Özellikler
 
 - [x] Kullanıcı favorileri/koleksiyon oluşturma modülü ekle
-- [ ] Eğitim modülü (okullar için) geliştir
-- [ ] Müze işbirliği için QR kod ile AI açıklama desteği ekle
 
 ---
 

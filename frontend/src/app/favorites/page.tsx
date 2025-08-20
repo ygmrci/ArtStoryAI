@@ -11,7 +11,7 @@ export default function FavoritesPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-black pt-24">
+      <div className="min-h-screen bg-black pt-24" style={{ position: 'relative', zIndex: 1 }}>
         <div className="max-w-7xl mx-auto px-6 py-8">
           {/* Başlık */}
           <div className="text-center mb-12">
@@ -74,7 +74,7 @@ export default function FavoritesPage() {
                   className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-110"
                   style={{
                     background: 'linear-gradient(135deg, #ffffff, #f1f5f9)',
-                    zIndex: -1,
+                    zIndex: 1, // Z-index'i düşürüyorum
                   }}
                 ></div>
 
@@ -95,7 +95,10 @@ export default function FavoritesPage() {
               </Link>
             </div>
           ) : (
-            <div className="flex flex-row flex-wrap justify-around items-stretch" style={{ margin: '8px 8px 0 8px' }}>
+            <div
+              className="flex flex-row flex-wrap justify-around items-stretch"
+              style={{ margin: '8px 8px 0 8px', position: 'relative', zIndex: 10 }}
+            >
               {favorites.map((artwork) => (
                 <div
                   key={artwork.id}
@@ -104,13 +107,16 @@ export default function FavoritesPage() {
                     width: '300px',
                     minHeight: '550px',
                     flex: '0 0 300px',
-                    background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
+                    background:
+                      'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
                     borderRadius: '24px',
                     backdropFilter: 'blur(10px)',
                     transform: 'translateY(0) scale(1)',
                     transition: 'all 0.5s ease',
                     overflow: 'visible',
                     margin: '8px',
+                    position: 'relative',
+                    zIndex: 20,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background =
@@ -136,6 +142,8 @@ export default function FavoritesPage() {
                       maxHeight: '260px',
                       borderTopLeftRadius: '24px',
                       borderTopRightRadius: '24px',
+                      position: 'relative',
+                      zIndex: 30,
                     }}
                   >
                     <img
@@ -160,7 +168,7 @@ export default function FavoritesPage() {
                         position: 'absolute',
                         top: '8px',
                         right: '8px',
-                        zIndex: 9999,
+                        zIndex: 100, // Z-index'i düşürüyorum
                         backgroundColor: 'rgba(220, 38, 38, 0.9)',
                         borderRadius: '50%',
                         width: '40px',
@@ -197,7 +205,7 @@ export default function FavoritesPage() {
                   <div
                     className="p-3 sm:p-4 relative flex-1 flex flex-col justify-between"
                     style={{
-                      zIndex: 10,
+                      zIndex: 10, // Z-index'i düşürüyorum
                       minHeight: '140px',
                       maxHeight: '180px',
                     }}
@@ -207,7 +215,9 @@ export default function FavoritesPage() {
                         {artwork.art_name}
                       </h4>
                       <div className="space-y-1">
-                        <p className="text-gray-300 text-xs sm:text-sm truncate">{artwork.artist}</p>
+                        <p className="text-gray-300 text-xs sm:text-sm truncate">
+                          {artwork.artist}
+                        </p>
                         <p className="text-xs sm:text-sm truncate" style={{ color: '#9ca3af' }}>
                           {artwork.year}
                         </p>

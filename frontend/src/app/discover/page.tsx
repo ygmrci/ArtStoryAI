@@ -1,6 +1,6 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import SmartFilterModal from '../components/SmartFilterModal';
 import { useFilterArtworks } from '../hooks/useFilterArtworks';
@@ -22,14 +22,16 @@ interface Artwork {
 const DiscoverPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeFilters, setActiveFilters] = useState<any>({});
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // Filtreleme hook'u
-  const { filterOptions, fetchFilteredArtworks } = useFilterArtworks();
+  // Filtreleme hook'u - tüm state'i buradan al
+  const {
+    artworks,
+    loading: isLoading,
+    error,
+    filterOptions,
+    fetchFilteredArtworks,
+  } = useFilterArtworks();
 
   // Filtreleme fonksiyonları
   const handleOpenFilterModal = () => {
@@ -41,268 +43,40 @@ const DiscoverPage = () => {
   };
 
   const handleApplyFilters = async (filters: any) => {
-    console.log('Uygulanan filtreler:', filters);
-    setActiveFilters(filters);
-
     try {
       await fetchFilteredArtworks(filters);
-      // Filtreleme sonrası mock data yerine gerçek veriyi kullan
-      // setArtworks(filteredArtworks);
     } catch (error) {
       console.error('Filtreleme hatası:', error);
     }
   };
 
-  // Mock data - gerçek uygulamada backend'den gelecek
-  const mockArtworks: Artwork[] = [
-    {
-      id: '1',
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      year: '1503-1519',
-      period: 'Rönesans',
-      style: 'Realizm',
-      museum: 'Louvre',
-      imageUrl: '/artworks/mona-lisa.jpg',
-      description: 'Dünyaca ünlü portre',
-      source: 'manual',
-    },
-    {
-      id: '2',
-      title: 'Yıldızlı Gece',
-      artist: 'Vincent van Gogh',
-      year: '1889',
-      period: 'Modern',
-      style: 'Post-Empresyonizm',
-      museum: 'MOMA',
-      imageUrl: '/artworks/kafeTerastaGece.webp',
-      description: 'Hareketli gökyüzü tasviri',
-      source: 'manual',
-    },
-    {
-      id: '3',
-      title: 'Guernica',
-      artist: 'Pablo Picasso',
-      year: '1937',
-      period: 'Modern',
-      style: 'Kübizm',
-      museum: 'Reina Sofía',
-      imageUrl: '/artworks/Picasso_Guernica.jpg',
-      description: 'Savaşın dehşetini yansıtan eser',
-      source: 'manual',
-    },
-    {
-      id: '4',
-      title: 'Avignonlu Kızlar',
-      artist: 'Pablo Picasso',
-      year: '1907',
-      period: 'Modern',
-      style: 'Kübizm',
-      museum: 'MOMA',
-      imageUrl: '/artworks/avignonluKızlar.jpg',
-      description: 'Kübist sanatın öncü eseri',
-      source: 'manual',
-    },
-    {
-      id: '5',
-      title: "Venüs'ün Doğuşu",
-      artist: 'Sandro Botticelli',
-      year: '1485',
-      period: 'Rönesans',
-      style: 'Realizm',
-      museum: 'Uffizi',
-      imageUrl: '/artworks/VenüsDogusu.jpg',
-      description: 'Klasik mitolojik tema',
-      source: 'manual',
-    },
-    {
-      id: '6',
-      title: 'Ağlayan Kadın',
-      artist: 'Pablo Picasso',
-      year: '1937',
-      period: 'Modern',
-      style: 'Kübizm',
-      museum: 'Tate Modern',
-      imageUrl: '/artworks/Weeping-woman.jpg',
-      description: 'Kübist tarzda ağlayan kadın portresi',
-      source: 'manual',
-    },
-    {
-      id: '13',
-      title: 'Çığlık',
-      artist: 'Edvard Munch',
-      year: '1893',
-      period: 'Modern',
-      style: 'Ekspresyonizm',
-      museum: 'National Gallery',
-      imageUrl: '/artworks/Weeping-woman.jpg',
-      description: 'Varoluşsal kaygıyı yansıtan ikonik eser',
-      source: 'manual',
-    },
-    {
-      id: '7',
-      title: "Adem'in Yaratılışı",
-      artist: 'Michelangelo',
-      year: '1512',
-      period: 'Rönesans',
-      style: 'Realizm',
-      museum: 'Sistine Chapel',
-      imageUrl: '/artworks/Adem.jpg',
-      description: 'İnsanlığın yaratılışını tasvir eden fresk',
-      source: 'manual',
-    },
-    {
-      id: '8',
-      title: 'Kaplumbağa Terbiyecisi',
-      artist: 'Osman Hamdi Bey',
-      year: '1906',
-      period: 'Modern',
-      style: 'Oryantalizm',
-      museum: 'Pera Museum',
-      imageUrl: '/artworks/kaplumbagaTerbiyecisi.jpg',
-      description: 'Osmanlı kültürünü yansıtan önemli eser',
-      source: 'manual',
-    },
-    {
-      id: '9',
-      title: 'Nilüferler',
-      artist: 'Claude Monet',
-      year: '1916',
-      period: 'Modern',
-      style: 'Empresyonizm',
-      museum: 'Orangerie',
-      imageUrl: '/artworks/Nilüferler.jpg',
-      description: 'Su üzerindeki nilüfer çiçeklerinin empresyonist tasviri',
-      source: 'manual',
-    },
-    {
-      id: '10',
-      title: 'Köylü Kadın',
-      artist: 'Vincent van Gogh',
-      year: '1885',
-      period: 'Modern',
-      style: 'Realizm',
-      museum: 'Van Gogh Museum',
-      imageUrl: '/artworks/koyluKadın.jpg',
-      description: 'Köy yaşamının gerçekçi tasviri',
-      source: 'manual',
-    },
-    {
-      id: '11',
-      title: 'David',
-      artist: 'Michelangelo',
-      year: '1504',
-      period: 'Rönesans',
-      style: 'Realizm',
-      museum: 'Accademia',
-      imageUrl: '/artworks/David.jpg',
-      description: 'İnsan vücudunun mükemmelliğini yansıtan heykel',
-      source: 'manual',
-    },
-    {
-      id: '12',
-      title: 'Amerikan Gotiği',
-      artist: 'Grant Wood',
-      year: '1930',
-      period: 'Modern',
-      style: 'Regionalism',
-      museum: 'Art Institute of Chicago',
-      imageUrl: '/artworks/amerikanGotiği.jpg',
-      description: 'Amerikan kırsal yaşamının ikonik tasviri',
-      source: 'manual',
-    },
-  ];
-
-  useEffect(() => {
-    // URL'den filtreleri al
+  // URL'den filtreleri al ve uygula - useCallback ile sarmala
+  const applyFiltersFromURL = useCallback(async () => {
     const filters: any = {};
     const periods = searchParams.get('periods');
     const styles = searchParams.get('styles');
     const colors = searchParams.get('colors');
     const sizes = searchParams.get('sizes');
     const museums = searchParams.get('museums');
+    const sources = searchParams.get('sources');
 
     if (periods) filters.periods = periods.split(',');
     if (styles) filters.styles = styles.split(',');
     if (colors) filters.colors = colors.split(',');
     if (sizes) filters.sizes = sizes.split(',');
     if (museums) filters.museums = museums.split(',');
+    if (sources) filters.sources = sources.split(',');
 
-    setActiveFilters(filters);
+    // Eğer URL'de filtre varsa, bunları uygula
+    if (Object.keys(filters).length > 0) {
+      await fetchFilteredArtworks(filters);
+    }
+  }, [searchParams, fetchFilteredArtworks]);
 
-    // Backend API'den filtreli sonuçları al
-    const fetchFilteredResults = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        // Backend API endpoint'i
-        const apiUrl = new URL('http://127.0.0.1:8000/api/filter-artworks');
-
-        // Query parametrelerini ekle
-        if (filters.periods) apiUrl.searchParams.set('periods', filters.periods.join(','));
-        if (filters.styles) apiUrl.searchParams.set('styles', filters.styles.join(','));
-        if (filters.colors) apiUrl.searchParams.set('colors', filters.colors.join(','));
-        if (filters.sizes) apiUrl.searchParams.set('sizes', filters.sizes.join(','));
-        if (filters.museums) apiUrl.searchParams.set('museums', filters.museums.join(','));
-
-        console.log('Backend API çağrısı:', apiUrl.toString());
-
-        const response = await fetch(apiUrl.toString());
-        if (!response.ok) {
-          throw new Error(`API hatası: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Backend API yanıtı:', data);
-
-        if (data.artworks && data.artworks.length > 0) {
-          // Backend'den gelen verileri kullan
-          setArtworks(data.artworks);
-        } else {
-          // Fallback: Mock data kullan
-          console.log('Backend veri yok, mock data kullanılıyor');
-          let filtered = mockArtworks;
-
-          if (filters.periods && filters.periods.length > 0) {
-            filtered = filtered.filter((artwork) => filters.periods.includes(artwork.period));
-          }
-
-          if (filters.styles && filters.styles.length > 0) {
-            filtered = filtered.filter((artwork) => filters.styles.includes(artwork.style));
-          }
-
-          if (filters.museums && filters.museums.length > 0) {
-            filtered = filtered.filter((artwork) => filters.museums.includes(artwork.museum));
-          }
-
-          setArtworks(filtered);
-        }
-      } catch (err) {
-        console.error('API hatası, mock data kullanılıyor:', err);
-        // Hata durumunda mock data kullan
-        let filtered = mockArtworks;
-
-        if (filters.periods && filters.periods.length > 0) {
-          filtered = filtered.filter((artwork) => filters.periods.includes(artwork.period));
-        }
-
-        if (filters.styles && filters.styles.length > 0) {
-          filtered = filtered.filter((artwork) => filters.styles.includes(artwork.style));
-        }
-
-        if (filters.museums && filters.museums.length > 0) {
-          filtered = filtered.filter((artwork) => filters.museums.includes(artwork.museum));
-        }
-
-        setArtworks(filtered);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFilteredResults();
-  }, [searchParams]);
+  useEffect(() => {
+    // Sadece searchParams değiştiğinde çalışsın
+    applyFiltersFromURL();
+  }, [searchParams]); // fetchFilteredArtworks'ü dependency'den çıkar
 
   const handleBackToFilters = () => {
     router.back();
@@ -342,6 +116,28 @@ const DiscoverPage = () => {
       </div>
     );
   }
+
+  // Aktif filtreleri URL'den al
+  const getActiveFilters = () => {
+    const filters: any = {};
+    const periods = searchParams.get('periods');
+    const styles = searchParams.get('styles');
+    const colors = searchParams.get('colors');
+    const sizes = searchParams.get('sizes');
+    const museums = searchParams.get('museums');
+    const sources = searchParams.get('sources');
+
+    if (periods) filters.periods = periods.split(',');
+    if (styles) filters.styles = styles.split(',');
+    if (colors) filters.colors = colors.split(',');
+    if (sizes) filters.sizes = sizes.split(',');
+    if (museums) filters.museums = museums.split(',');
+    if (sources) filters.sources = sources.split(',');
+
+    return filters;
+  };
+
+  const activeFilters = getActiveFilters();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -497,7 +293,7 @@ const DiscoverPage = () => {
                 </div>
 
                 {/* İçerik Alanı */}
-                <div className="p-3 flex-1 flex flex-col justify-between h-40">
+                <div className="p-4 pl-10 flex-1 flex flex-col justify-between h-40">
                   {/* Başlık ve Sanatçı */}
                   <div className="mb-2">
                     <h3 className="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
