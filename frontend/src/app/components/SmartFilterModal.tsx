@@ -98,7 +98,7 @@ const SmartFilterModal = ({
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 8000, // Header'ın altında ama diğer içeriklerin üstünde
+        zIndex: 100000, // Header'ın üstünde (99999'dan büyük)
         display: isOpen ? 'block' : 'none',
       }}
     >
@@ -111,7 +111,7 @@ const SmartFilterModal = ({
           right: 0,
           bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          zIndex: 8000, // Header'ın altında ama diğer içeriklerin üstünde
+          zIndex: 100000, // Header'ın üstünde
         }}
         onClick={onClose}
       />
@@ -120,17 +120,19 @@ const SmartFilterModal = ({
       <div
         style={{
           position: 'fixed',
-          top: '50%',
+          top: '60px', // Header'ın altında başla (header yüksekliği ~60px)
           left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '400px',
-          height: '600px', // Sabit yükseklik
+          transform: 'translateX(-50%)', // Sadece yatayda ortala
+          width: '90vw', // Mobilde ekran genişliğinin %90'ı
+          maxWidth: '400px', // Desktop'ta maksimum 400px
+          maxHeight: 'calc(100vh - 80px)', // Ekran yüksekliğinden header'ı çıkar
           backgroundColor: 'white',
           borderRadius: '8px',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          zIndex: 8001, // Modal içeriği overlay'in üstünde
+          zIndex: 100001, // Modal içeriği overlay'in üstünde
           display: 'flex',
           flexDirection: 'column', // Flexbox layout
+          overflow: 'hidden', // Taşan içeriği gizle
         }}
       >
         {/* Header */}
@@ -193,6 +195,7 @@ const SmartFilterModal = ({
             flex: 1, // Kalan alanı kapla
             overflowY: 'auto', // Dikey scroll
             minHeight: 0, // Flexbox için gerekli
+            maxHeight: '100%', // Maksimum yükseklik
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

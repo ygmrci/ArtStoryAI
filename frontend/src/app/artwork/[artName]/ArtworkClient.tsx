@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import SimilarArtworks from '../../components/SimilarArtworks';
 import AudioPlayer from '../../components/AudioPlayer';
+import Footer from '../../components/Footer';
 import { useFavorites } from '../../contexts/FavoritesContext';
 
 interface SimilarArtwork {
@@ -632,6 +633,9 @@ export default function ArtworkClient({ artName }: { artName: string }) {
 
       {/* Benzer Eserler */}
       <SimilarArtworks currentArtwork={artwork.art_name} />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

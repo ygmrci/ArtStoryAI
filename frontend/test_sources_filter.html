@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sources Filtresi Test Sayfası</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .test-section {
+        background: white;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .test-button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 14px;
+      }
+      .test-button:hover {
+        background: #2563eb;
+      }
+      .test-button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+      .result {
+        background: #f3f4f6;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+        font-family: monospace;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .success {
+        border-left: 4px solid #10b981;
+      }
+      .error {
+        border-left: 4px solid #ef4444;
+      }
+      .info {
+        border-left: 4px solid #3b82f6;
+      }
+      .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .filter-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .filter-group {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+      }
+      .filter-group h3 {
+        margin: 0 0 10px 0;
+        color: #374151;
+        font-size: 16px;
+      }
+      .filter-checkbox {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+      }
+      .filter-checkbox input {
+        margin-right: 8px;
+      }
+      .filter-checkbox label {
+        font-size: 14px;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎨 ArtStoryAI Sources Filtresi Test Sayfası</h1>
+
+    <div class="test-section">
+      <h2>🔧 Test Araçları</h2>
+      <button class="test-button" onclick="testEndpointAvailability()">
+        Endpoint Erişilebilirlik Testi
+      </button>
+      <button class="test-button" onclick="testFilterOptions()">Filtre Seçenekleri Testi</button>
+      <button class="test-button" onclick="testSourcesFilter()">Sources Filtresi Testi</button>
+      <button class="test-button" onclick="testCombinedFilters()">Kombine Filtreler Testi</button>
+      <button class="test-button" onclick="runAllTests()">Tüm Testleri Çalıştır</button>
+      <button class="test-button" onclick="clearResults()">Sonuçları Temizle</button>
+    </div>
+
+    <div class="test-section">
+      <h2>🎛️ Filtre Seçenekleri</h2>
+      <div class="filter-options">
+        <div class="filter-group">
+          <h3>Dönem</h3>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="period-ronesans" value="Rönesans" />
+            <label for="period-ronesans">Rönesans</label>
+          </div>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="period-modern" value="Modern" />
+            <label for="period-modern">Modern</label>
+          </div>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="period-cagdas" value="Çağdaş" />
+            <label for="period-cagdas">Çağdaş</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Stil</h3>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="style-klasik" value="Klasik" />
+            <label for="style-klasik">Klasik</label>
+          </div>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="style-empresyonizm" value="Empresyonizm" />
+            <label for="style-empresyonizm">Empresyonizm</label>
+          </div>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="style-popart" value="Pop Art" />
+            <label for="style-popart">Pop Art</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Kaynak</h3>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="source-manual" value="manual" checked />
+            <label for="source-manual">Manuel Görseller</label>
+          </div>
+          <div class="filter-checkbox">
+            <input type="checkbox" id="source-met" value="met_museum" checked />
+            <label for="source-met">MET Museum</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="test-button" onclick="testCustomFilters()">Seçili Filtrelerle Test Et</button>
+    </div>
+
+    <div class="test-section">
+      <h2>📊 Test Sonuçları</h2>
+      <div id="test-results"></div>
+    </div>
+
+    <script>
+      const API_BASE_URL = 'http://localhost:8001';
+
+      // Test sonuçlarını sakla
+      let testResults = [];
+
+      // Sonuç ekle
+      function addResult(title, content, type = 'info') {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = `result ${type}`;
+        resultDiv.innerHTML = `
+                <strong>${title}</strong>
+                <div>${content}</div>
+            `;
+
+        document.getElementById('test-results').appendChild(resultDiv);
+        testResults.push({ title, content, type });
+      }
+
+      // Loading göster
+      function showLoading(text) {
+        return `<span class="loading"></span> ${text}`;
+      }
+
+      // Endpoint erişilebilirlik testi
+      async function testEndpointAvailability() {
+        addResult('🔍 Endpoint Erişilebilirlik Testi', showLoading('Test başlıyor...'), 'info');
+
+        const endpoints = [
+          '/api/filter/options',
+          '/api/filter/artworks',
+          '/api/filter/stats',
+          '/api/filter/manual-artworks',
+        ];
+
+        let allAvailable = true;
+        let results = [];
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`);
+            if (response.ok) {
+              results.push(`✅ ${endpoint} - Erişilebilir`);
+            } else {
+              results.push(`❌ ${endpoint} - HTTP ${response.status}`);
+              allAvailable = false;
+            }
+          } catch (error) {
+            results.push(`❌ ${endpoint} - Bağlantı hatası: ${error.message}`);
+            allAvailable = false;
+          }
+        }
+
+        const type = allAvailable ? 'success' : 'error';
+        const status = allAvailable
+          ? "✅ Tüm endpoint'ler erişilebilir"
+          : "❌ Bazı endpoint'ler erişilemez";
+
+        addResult('🔍 Endpoint Erişilebilirlik Testi', `${status}\n\n${results.join('\n')}`, type);
+      }
+
+      // Filtre seçenekleri testi
+      async function testFilterOptions() {
+        addResult(
+          '🔍 Filtre Seçenekleri Testi',
+          showLoading('Filtre seçenekleri alınıyor...'),
+          'info',
+        );
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/filter/options`);
+          if (response.ok) {
+            const data = await response.json();
+            const filterData = data.data || {};
+
+            const results = [
+              `✅ Filtre seçenekleri alındı: ${Object.keys(filterData).length} kategori`,
+              `📋 Mevcut sources: ${filterData.sources?.join(', ') || 'Yok'}`,
+            ];
+
+            addResult('🔍 Filtre Seçenekleri Testi', results.join('\n'), 'success');
+          } else {
+            addResult(
+              '🔍 Filtre Seçenekleri Testi',
+              `❌ Filtre seçenekleri alınamadı: HTTP ${response.status}`,
+              'error',
+            );
+          }
+        } catch (error) {
+          addResult('🔍 Filtre Seçenekleri Testi', `❌ Test hatası: ${error.message}`, 'error');
+        }
+      }
+
+      // Sources filtresi testi
+      async function testSourcesFilter() {
+        addResult(
+          '🔍 Sources Filtresi Testi',
+          showLoading('Sources filtresi test ediliyor...'),
+          'info',
+        );
+
+        const testCases = [
+          { name: 'Sadece Manual', params: { sources: 'manual' } },
+          { name: 'Sadece MET Museum', params: { sources: 'met_museum' } },
+          { name: 'Her İki Source', params: { sources: 'manual,met_museum' } },
+          { name: 'Sources Yok (Varsayılan)', params: {} },
+        ];
+
+        let results = [];
+
+        for (const testCase of testCases) {
+          try {
+            const url = new URL(`${API_BASE_URL}/api/filter/artworks`);
+            Object.entries(testCase.params).forEach(([key, value]) => {
+              url.searchParams.set(key, value);
+            });
+
+            const response = await fetch(url);
+            if (response.ok) {
+              const data = await response.json();
+              const sources = data.sources || {};
+
+              results.push(`${testCase.name}:`);
+              results.push(`  - Toplam eser: ${data.total}`);
+              results.push(
+                `  - Sources: manual=${sources.manual}, met_museum=${sources.met_museum}`,
+              );
+              results.push('');
+            } else {
+              results.push(`${testCase.name}: ❌ HTTP ${response.status}`);
+            }
+          } catch (error) {
+            results.push(`${testCase.name}: ❌ Hata: ${error.message}`);
+          }
+        }
+
+        addResult('🔍 Sources Filtresi Testi', results.join('\n'), 'success');
+      }
+
+      // Kombine filtreler testi
+      async function testCombinedFilters() {
+        addResult(
+          '🔍 Kombine Filtreler Testi',
+          showLoading('Kombine filtreler test ediliyor...'),
+          'info',
+        );
+
+        const testCases = [
+          { name: 'Rönesans + Manual', params: { periods: 'Rönesans', sources: 'manual' } },
+          { name: 'Modern + MET Museum', params: { periods: 'Modern', sources: 'met_museum' } },
+        ];
+
+        let results = [];
+
+        for (const testCase of testCases) {
+          try {
+            const url = new URL(`${API_BASE_URL}/api/filter/artworks`);
+            Object.entries(testCase.params).forEach(([key, value]) => {
+              url.searchParams.set(key, value);
+            });
+
+            const response = await fetch(url);
+            if (response.ok) {
+              const data = await response.json();
+              const sources = data.sources || {};
+
+              results.push(`${testCase.name}:`);
+              results.push(`  - Toplam eser: ${data.total}`);
+              results.push(
+                `  - Sources: manual=${sources.manual}, met_museum=${sources.met_museum}`,
+              );
+              results.push('');
+            } else {
+              results.push(`${testCase.name}: ❌ HTTP ${response.status}`);
+            }
+          } catch (error) {
+            results.push(`${testCase.name}: ❌ Hata: ${error.message}`);
+          }
+        }
+
+        addResult('🔍 Kombine Filtreler Testi', results.join('\n'), 'success');
+      }
+
+      // Seçili filtrelerle test
+      async function testCustomFilters() {
+        addResult(
+          '🔍 Özel Filtreler Testi',
+          showLoading('Seçili filtrelerle test ediliyor...'),
+          'info',
+        );
+
+        // Seçili filtreleri topla
+        const filters = {};
+
+        // Dönem filtreleri
+        const selectedPeriods = Array.from(
+          document.querySelectorAll('input[id^="period-"]:checked'),
+        ).map((cb) => cb.value);
+        if (selectedPeriods.length > 0) {
+          filters.periods = selectedPeriods.join(',');
+        }
+
+        // Stil filtreleri
+        const selectedStyles = Array.from(
+          document.querySelectorAll('input[id^="style-"]:checked'),
+        ).map((cb) => cb.value);
+        if (selectedStyles.length > 0) {
+          filters.styles = selectedStyles.join(',');
+        }
+
+        // Source filtreleri
+        const selectedSources = Array.from(
+          document.querySelectorAll('input[id^="source-"]:checked'),
+        ).map((cb) => cb.value);
+        if (selectedSources.length > 0) {
+          filters.sources = selectedSources.join(',');
+        }
+
+        try {
+          const url = new URL(`${API_BASE_URL}/api/filter/artworks`);
+          Object.entries(filters).forEach(([key, value]) => {
+            url.searchParams.set(key, value);
+          });
+
+          const response = await fetch(url);
+          if (response.ok) {
+            const data = await response.json();
+            const sources = data.sources || {};
+
+            const results = [
+              `Seçili filtreler: ${JSON.stringify(filters, null, 2)}`,
+              `Sonuç:`,
+              `  - Toplam eser: ${data.total}`,
+              `  - Sources: manual=${sources.manual}, met_museum=${sources.met_museum}`,
+              `  - URL: ${url.toString()}`,
+            ];
+
+            addResult('🔍 Özel Filtreler Testi', results.join('\n'), 'success');
+          } else {
+            addResult(
+              '🔍 Özel Filtreler Testi',
+              `❌ Test hatası: HTTP ${response.status}`,
+              'error',
+            );
+          }
+        } catch (error) {
+          addResult('🔍 Özel Filtreler Testi', `❌ Test hatası: ${error.message}`, 'error');
+        }
+      }
+
+      // Tüm testleri çalıştır
+      async function runAllTests() {
+        addResult('🚀 Tüm Testler', 'Tüm testler sırayla çalıştırılıyor...', 'info');
+
+        await testEndpointAvailability();
+        await testFilterOptions();
+        await testSourcesFilter();
+        await testCombinedFilters();
+
+        addResult('🚀 Tüm Testler', '✅ Tüm testler tamamlandı!', 'success');
+      }
+
+      // Sonuçları temizle
+      function clearResults() {
+        document.getElementById('test-results').innerHTML = '';
+        testResults = [];
+      }
+
+      // Sayfa yüklendiğinde otomatik test
+      window.addEventListener('load', () => {
+        addResult(
+          '📱 Sayfa Yüklendi',
+          'Test sayfası hazır. Testleri çalıştırmaya başlayabilirsiniz.',
+          'info',
+        );
+      });
+    </script>
+  </body>
+</html>

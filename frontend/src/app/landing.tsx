@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Footer from './components/Footer';
 
 export default function Landing() {
   const [query, setQuery] = useState('');
@@ -41,135 +42,172 @@ export default function Landing() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-start bg-black overflow-hidden">
-      {/* Arka plan görseli */}
-      <img
-        src="/VanGogh.png"
-        alt="Van Gogh"
-        className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{
-          filter: 'brightness(0.5) blur(0px)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-      {/* Karanlık overlay */}
-      <div className="absolute inset-0 bg-black/60" style={{ zIndex: 1, pointerEvents: 'none' }} />
-
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div
-          className="absolute inset-0 bg-black/80 flex items-center justify-center"
-          style={{ zIndex: 100 }}
-        >
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4"></div>
-            <p className="text-white text-xl font-semibold">Eser aranıyor...</p>
-            <p className="text-white/70 text-sm mt-2">"{query}" için bilgiler toplanıyor</p>
-          </div>
-        </div>
-      )}
-
-      {/* İçerik */}
-      <div
-        className="relative flex flex-col items-start justify-start pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
-        style={{
-          minHeight: '60vh',
-          paddingLeft: '50px',
-          paddingRight: '50px',
-          zIndex: 9999,
-          position: 'relative',
-          pointerEvents: 'auto',
-        }}
-      >
-        <h1 className="text-5xl font-serif font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">
-          ArtStoryAI
-        </h1>
-        <h2 className="text-2xl font-medium text-white/90 mb-8 max-w-md drop-shadow">
-          Sanat Tarihini Daha Önce Hiç Olmadığı Gibi Keşfedin
-        </h2>
-
-        {/* Demo Linkleri */}
-        {/* Filter demo link'i kaldırıldı - keşfet sayfasında iyileştirilecek */}
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-row w-full max-w-lg gap-2 bg-white/10 rounded-full p-2 shadow-lg backdrop-blur-md"
+    <>
+      <div className="relative min-h-screen w-full flex items-center justify-start bg-black overflow-hidden">
+        {/* Arka plan görseli */}
+        <img
+          src="/VanGogh.png"
+          alt="Van Gogh"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           style={{
+            filter: 'brightness(0.5) blur(0px)',
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}
+        />
+        {/* Karanlık overlay */}
+        <div
+          className="absolute inset-0 bg-black/60"
+          style={{ zIndex: 1, pointerEvents: 'none' }}
+        />
+
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div
+            className="absolute inset-0 bg-black/80 flex items-center justify-center"
+            style={{ zIndex: 100 }}
+          >
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4"></div>
+              <p className="text-white text-xl font-semibold">Eser aranıyor...</p>
+              <p className="text-white/70 text-sm mt-2">"{query}" için bilgiler toplanıyor</p>
+            </div>
+          </div>
+        )}
+
+        {/* İçerik */}
+        <div
+          className="relative flex flex-col items-start justify-start pt-16 md:pt-24 lg:pt-32 max-w-xl w-full"
+          style={{
+            minHeight: '60vh',
+            paddingLeft: '50px',
+            paddingRight: '50px',
             zIndex: 9999,
             position: 'relative',
             pointerEvents: 'auto',
           }}
         >
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Bir tablo adı yazın  örn: Mona Lisa"
-            className="w-[400px] px-20 py-10 rounded-full bg-white text-black font-semibold text-xl transition-all duration-300 hover:bg-white focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-400 placeholder:text-gray-500 shadow-2xl border-2 border-white/20 backdrop-blur-sm"
-            disabled={false}
+          <h1 className="text-5xl font-serif font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">
+            ArtStoryAI
+          </h1>
+          <h2 className="text-2xl font-medium text-white/90 mb-8 max-w-md drop-shadow">
+            Sanat Tarihini Daha Önce Hiç Olmadığı Gibi Keşfedin
+          </h2>
+
+          {/* Arama Formu */}
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col lg:flex-row w-full max-w-4xl gap-3 bg-white/20 backdrop-blur-xl rounded-2xl p-3 shadow-2xl border border-white/30"
             style={{
               zIndex: 9999,
               position: 'relative',
               pointerEvents: 'auto',
-              cursor: 'text',
-            }}
-          />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="group relative px-12 py-6 rounded-full font-semibold text-xl transition-all duration-500 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            style={{
-              background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)',
-              color: '#ffffff',
-              boxShadow: '0 8px 32px rgba(59, 130, 246, 0.4)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-            }}
-            onMouseEnter={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(59, 130, 246, 0.6)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(59, 130, 246, 0.4)';
-              }
             }}
           >
-            {/* Button Glow Effect */}
-            <div
-              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-110"
-              style={{
-                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)',
-                zIndex: -1,
-              }}
-            ></div>
-
-            {isLoading ? (
-              <div className="flex items-center gap-3 relative z-10">
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                <span className="font-medium">Aranıyor...</span>
+            {/* Input Container */}
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg
+                  className="w-6 h-6 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
               </div>
-            ) : (
-              <span className="relative z-10 font-bold">Ara</span>
-            )}
-          </button>
-        </form>
-      </div>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Bir sanat eseri yazın.(Mona Lisa) "
+                className="w-full pl-12 pr-6 py-5 lg:py-6 rounded-xl bg-white/95 backdrop-blur-sm text-gray-800 font-medium text-base lg:text-lg transition-all duration-300 hover:bg-white focus:bg-white focus:outline-none focus:ring-4 focus:ring-purple-300/50 focus:border-purple-400 placeholder:text-gray-500 shadow-lg border border-white/50"
+                disabled={isLoading}
+                style={{
+                  zIndex: 9999,
+                  position: 'relative',
+                  pointerEvents: 'auto',
+                  cursor: 'text',
+                }}
+              />
+              {/* Input Focus Indicator */}
+              <div className="absolute inset-0 rounded-xl border-2 border-transparent transition-all duration-300 pointer-events-none"></div>
+            </div>
 
-      {/* Responsive: Mobilde içerik ortalanır ve alt kısma kayar */}
-      <style jsx>{`
-        @media (max-width: 768px) {
-          div[style*='min-height:60vh'] {
-            align-items: center !important;
-            justify-content: flex-end !important;
-            padding-top: 0 !important;
-            padding-bottom: 3rem !important;
-            max-width: 100vw !important;
+            {/* Arama Butonu */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="group relative px-8 lg:px-12 py-5 lg:py-6 rounded-xl font-semibold text-base lg:text-lg transition-all duration-500 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-400/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:transform-none"
+              style={{
+                background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)',
+                color: '#ffffff',
+                boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(139, 92, 246, 0.6)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 92, 246, 0.4)';
+                }
+              }}
+            >
+              {/* Button Glow Effect */}
+              <div
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-110"
+                style={{
+                  background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)',
+                  zIndex: -1,
+                }}
+              ></div>
+
+              {isLoading ? (
+                <div className="flex items-center gap-3 relative z-10">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span className="font-medium">Aranıyor...</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 relative z-10">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <span className="font-bold">Ara</span>
+                </div>
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* Responsive: Mobilde içerik ortalanır ve alt kısma kayar */}
+        <style jsx>{`
+          @media (max-width: 768px) {
+            div[style*='min-height:60vh'] {
+              align-items: center !important;
+              justify-content: flex-end !important;
+              padding-top: 0 !important;
+              padding-bottom: 3rem !important;
+              max-width: 100vw !important;
+            }
           }
-        }
-      `}</style>
-    </div>
+        `}</style>
+      </div>
+      <Footer />
+    </>
   );
 }
