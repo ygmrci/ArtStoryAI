@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'ArtStoryAI',
   description: 'Sanat eserlerini keşfet, hikayelerini öğren.',
   metadataBase: new URL(baseUrl),
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
   openGraph: {
     title: 'ArtStoryAI - Sanat Eserlerini Keşfet',
     description: 'Sanat eserlerini AI ile analiz edin, hikayelerini öğrenin.',
@@ -36,7 +37,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr">
-      <body className="m-0 p-0 overflow-x-hidden">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes"
+        />
+      </head>
+      <body className="m-0 p-0 overflow-x-hidden min-h-screen">
         <FavoritesProvider>{children}</FavoritesProvider>
       </body>
     </html>
