@@ -3,56 +3,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFavorites } from '../contexts/FavoritesContext';
-import SmartFilterModal from './SmartFilterModal';
 
 const Header = () => {
   const router = useRouter();
   const { favorites } = useFavorites();
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleFavoritesClick = () => {
     router.push('/favorites');
-  };
-
-  const handleDiscoverClick = () => {
-    setIsFilterModalOpen(true);
-  };
-
-  const handleCloseFilterModal = () => {
-    setIsFilterModalOpen(false);
-  };
-
-  const handleApplyFilters = (filters: any) => {
-    // Filtreleri URL parametrelerine çevir
-    const params = new URLSearchParams();
-
-    if (filters.periods && filters.periods.length > 0) {
-      params.set('periods', filters.periods.join(','));
-    }
-    if (filters.styles && filters.styles.length > 0) {
-      params.set('styles', filters.styles.join(','));
-    }
-    if (filters.colors && filters.colors.length > 0) {
-      params.set('colors', filters.colors.join(','));
-    }
-    if (filters.sizes && filters.sizes.length > 0) {
-      params.set('sizes', filters.sizes.join(','));
-    }
-    if (filters.museums && filters.museums.length > 0) {
-      params.set('museums', filters.museums.join(','));
-    }
-    if (filters.sources && filters.sources.length > 0) {
-      params.set('sources', filters.sources.join(','));
-    }
-
-    // Yeni sayfaya yönlendir
-    const queryString = params.toString();
-    const discoverUrl = queryString ? `/discover?${queryString}` : '/discover';
-    router.push(discoverUrl);
-
-    // Modal'ı kapat
-    setIsFilterModalOpen(false);
   };
 
   const toggleMobileMenu = () => {
@@ -68,7 +26,7 @@ const Header = () => {
       <header className="fixed top-0 left-0 w-full border-b border-gray-300 bg-white shadow-lg z-50">
         {/* Ana Header Container */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-1.5 sm:py-2 md:py-3 lg:py-4">
+          <div className="flex justify-between items-center py-1.5 sm:py-2 md:py-3 lg:py-4 relative">
             {/* Sol Taraf - Geri Dön Butonu + Logo */}
             <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
               {/* Geri Dön Butonu - Daha kompakt responsive boyutlar */}
@@ -139,7 +97,7 @@ const Header = () => {
             </div>
 
             {/* Orta - Desktop Navigation Links (Sadece md+ ekranlarda görünür) */}
-            <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8">
+            <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-0.5">
               {[
                 { href: '/', label: 'Ana Sayfa' },
                 { href: '/about', label: 'Hakkında' },
@@ -158,31 +116,6 @@ const Header = () => {
 
             {/* Sağ Taraf - Actions */}
             <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
-              {/* Keşfet Butonu - Daha kompakt responsive boyutlar */}
-              <button
-                onClick={handleDiscoverClick}
-                className="relative font-medium text-xs sm:text-sm md:text-base transition-all duration-300 hover:scale-105 text-gray-700 group flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 border border-gray-200"
-              >
-                <span className="relative z-10 flex items-center gap-1 sm:gap-2">
-                  <svg
-                    className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"
-                    />
-                  </svg>
-                  <span className="hidden sm:inline text-white font-medium">Keşfet</span>
-                  <span className="sm:hidden">🔍</span>
-                </span>
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-              </button>
-
               {/* Favorites Button - Daha kompakt responsive boyutlar */}
               <button
                 onClick={handleFavoritesClick}
@@ -253,16 +186,6 @@ const Header = () => {
           </div>
         </div>
       </header>
-
-      {/* Akıllı Filtreleme Modal */}
-      <SmartFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={handleCloseFilterModal}
-        onApplyFilters={handleApplyFilters}
-      />
-
-      {/* Debug bilgisi */}
-      {console.log('Header render - isFilterModalOpen:', isFilterModalOpen)}
     </>
   );
 };
