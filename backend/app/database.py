@@ -12,12 +12,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database connection settings
-DATABASE_URL = "postgresql://postgres:artstory123@localhost:5432/artstory_db"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:artstory123@localhost:5432/artstory_db")
 
 # Create SQLAlchemy engine
+_debug = os.getenv("DEBUG", "False").lower() == "true"
 engine = create_engine(
     DATABASE_URL,
-    echo=True,  # Set to False in production
+    echo=_debug,
     pool_pre_ping=True,
     pool_recycle=300
 )

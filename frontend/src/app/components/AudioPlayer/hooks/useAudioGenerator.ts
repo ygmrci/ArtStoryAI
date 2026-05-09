@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { API_CONFIG } from '../../../../lib/config';
 
 export const useAudioGenerator = (text: string) => {
   console.log('🔍 useAudioGenerator hook called with text:', text);
@@ -23,7 +24,7 @@ export const useAudioGenerator = (text: string) => {
       try {
         console.log('🎵 Ses üretimi başlatılıyor...', { text: text.trim(), voice });
 
-        const response = await fetch('http://127.0.0.1:8000/audio/story', {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/audio/story`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

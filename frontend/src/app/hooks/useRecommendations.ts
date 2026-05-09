@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_CONFIG } from '../../lib/config';
 
 interface SimilarArtwork {
   title: string;
@@ -41,7 +42,7 @@ export const useRecommendations = (artworkName: string) => {
         setLoading(true);
         setError(null);
 
-        const apiUrl = `http://127.0.0.1:8000/recommendations/similar/${encodeURIComponent(
+        const apiUrl = `${API_CONFIG.BASE_URL}/recommendations/similar/${encodeURIComponent(
           artworkName,
         )}?limit=5`;
 
@@ -93,7 +94,7 @@ export const useRecommendations = (artworkName: string) => {
         console.log('🎲 Fetching random artworks as fallback...');
 
         // Explore endpoint'inden random eserler al
-        const response = await fetch('http://127.0.0.1:8000/recommendations/explore?limit=10');
+        const response = await fetch(`${API_CONFIG.BASE_URL}/recommendations/explore?limit=10`);
 
         if (response.ok) {
           const data = await response.json();

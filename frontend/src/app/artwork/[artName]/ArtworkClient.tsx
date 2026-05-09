@@ -6,6 +6,7 @@ import SimilarArtworks from '../../components/SimilarArtworks';
 import AudioPlayer from '../../components/AudioPlayer';
 import Footer from '../../components/Footer';
 import { useFavorites } from '../../contexts/FavoritesContext';
+import { API_CONFIG } from '../../../lib/config';
 
 interface SimilarArtwork {
   title: string;
@@ -44,7 +45,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
     const fetchArtwork = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`http://127.0.0.1:8000/artwork/${encodeURIComponent(artName)}`);
+        const res = await fetch(`${API_CONFIG.BASE_URL}/artwork/${encodeURIComponent(artName)}`);
         if (!res.ok) {
           throw new Error(t('artwork.apiError'));
         }
@@ -310,7 +311,7 @@ export default function ArtworkClient({ artName }: { artName: string }) {
                     // Diğer eserler için backend'den gelen resmi kullan
                     // Eğer backend'den manuel resim URL'si geliyorsa, tam URL yap
                     if (artwork.image_url && artwork.image_url.startsWith('/manual-images/')) {
-                      return `http://127.0.0.1:8000${artwork.image_url}`;
+                      return `${API_CONFIG.BASE_URL}${artwork.image_url}`;
                     }
                     return (
                       artwork.image_url ||

@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useRecommendations } from '../hooks/useRecommendations';
+import { API_CONFIG } from '../../lib/config';
 
 interface SimilarArtwork {
   title: string;
@@ -260,7 +261,7 @@ export default function SimilarArtworks({ currentArtwork, currentArtist }: Simil
                     // Diğer eserler için AI resmini kullan
                     // Eğer backend'den manuel resim URL'si geliyorsa, tam URL yap
                     if (artwork.image_url && artwork.image_url.startsWith('/manual-images/')) {
-                      return `http://127.0.0.1:8000${artwork.image_url}`;
+                      return `${API_CONFIG.BASE_URL}${artwork.image_url}`;
                     }
                     return artwork.image_url;
                   }

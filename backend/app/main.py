@@ -2,7 +2,8 @@
 Main FastAPI application for ArtStoryAI
 """
 
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,6 +16,7 @@ from app.redis_cache_service import redis_cache
 from app.manual_image_routes import router as manual_image_router
 from app.met_museum_service import met_museum_service
 from app.filter_routes import router as filter_router
+from agents.agent_manager import AgentManager
 
 
 app = FastAPI(
@@ -23,17 +25,24 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Agent sistemi: yöneticiyi oluştur ve varsayılan ajanları yükle
+agent_manager = AgentManager()
+agent_manager.setup_default_agents()
+
 # CORS ayarı: Frontend'den gelen istekleri kabul et
+_allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+]
+_frontend_url = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
+if _frontend_url and _frontend_url not in _allowed_origins:
+    _allowed_origins.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000", 
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:3001",
-        "http://localhost:3000/",
-        "http://127.0.0.1:3000/"
-    ],  # Frontend URL'leri
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -176,6 +185,35 @@ def get_voices():
             "error": "Ses listesi alınırken hata oluştu",
             "details": str(e)
         }
+
+# Agent tabanlı eser analizi endpoint'i
+@app.post("/api/agents/analyze")
+async def analyze_artwork_with_agents(payload: dict):
+    """
+    Agent workflow kullanarak sanat eseri analizi ve içerik üretimi yapar
+    """
+    try:
+        artwork_name = payload.get("artwork_name", "")
+        if not artwork_name:
+            raise HTTPException(status_code=422, detail="'artwork_name' zorunludur")
+
+        artist_name = payload.get("artist_name", "")
+        style = payload.get("style", "romantic")
+
+        result = await agent_manager.run_artwork_analysis_workflow(
+            artwork_name=artwork_name,
+            artist_name=artist_name,
+            style=style,
+        )
+
+        if not result.get("success"):
+            raise HTTPException(status_code=400, detail=result.get("error", "Analysis failed"))
+
+        return result
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
 
 # Cache Yönetim Endpoint'leri
 @app.get("/cache/stats")
